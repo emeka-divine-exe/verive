@@ -47,10 +47,13 @@ export default function OrganizerProfilePage({ params }: { params: { id: string 
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 -mt-10 mb-10 relative z-10">
           <div className="flex items-end gap-5">
             {/* Logo — REPLACE with real logo. Download from {org.website} */}
-            <div className={`w-24 h-24 rounded-3xl ${org.avatarColor} flex items-center justify-center font-display font-bold text-2xl flex-shrink-0 glow ring-4`}
-              style={{ color: '#C4B5FD', ringColor: '#0D0719', border: '1px solid rgba(196,181,253,0.12)' }}>
-              {org.initials}
-            </div>
+            <div
+  className={`w-24 h-24 rounded-3xl ${org.avatarColor} flex items-center justify-center font-display font-bold text-2xl flex-shrink-0 glow ring-4 ring-[#0D0719]`}
+  style={{
+    color: '#C4B5FD',
+    border: '1px solid rgba(196,181,253,0.12)'
+  }}
+>
             <div className="pb-1">
               {/* Name + verified badge */}
               <div className="flex flex-wrap items-center gap-2.5 mb-1">
