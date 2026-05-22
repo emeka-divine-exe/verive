@@ -56,8 +56,8 @@ export default function OrganizersPage() {
                 <div className="flex items-start gap-4">
                   {/* Logo — REPLACE with real org logo */}
                   {/* Download from: {org.website} */}
-                  <div className={`w-14 h-14 rounded-2xl ${org.avatarColor} flex items-center justify-center font-display font-bold text-sm flex-shrink-0 -mt-10 ring-4`}
-                    style={{ color: '#C4B5FD', ringColor: '#0D0719', border: '1px solid rgba(196,181,253,0.12)' }}>
+                  <div className={`w-24 h-24 rounded-3xl ${org.avatarColor} flex items-center justify-center font-display font-bold text-2xl flex-shrink-0 glow ring-4 ring-[#0D0719]`}
+                    style={{ color: '#C4B5FD', border: '1px solid rgba(196,181,253,0.12)' }}>
                     {org.initials}
                   </div>
 
