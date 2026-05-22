@@ -1,101 +1,112 @@
-# Verivent
+# Verivent — Discover Verified Events
 
-> Curated · Verified · Trusted — The platform for meaningful events.
+> Curated · Verified · Trusted
+
+---
+
+## Quick Start
+
+```bash
+npm install
+npm run dev
+# http://localhost:3000
+```
 
 ---
 
 ## Stack
 
-| Layer      | Technology                     |
-|------------|--------------------------------|
-| Framework  | Next.js 14 (App Router)        |
-| PWA        | next-pwa                       |
-| UI         | React + TypeScript             |
-| Styling    | Tailwind CSS                   |
-| Animation  | GSAP + ScrollTrigger           |
-| Scroll     | @studio-freight/lenis          |
-| Icons      | @iconify/react                 |
-| Backend    | Supabase (coming Phase 2)      |
+| Layer     | Tech                          |
+|-----------|-------------------------------|
+| Framework | Next.js 14 (App Router)       |
+| PWA       | next-pwa                      |
+| Language  | TypeScript                    |
+| Styling   | **Tailwind CSS v4** (CSS-first config via `@theme {}`) |
+| Animation | GSAP + ScrollTrigger          |
+| Scroll    | @studio-freight/lenis         |
+| Icons     | @iconify/react                |
+| Backend   | Supabase (Phase 2)            |
 
 ---
 
-## Getting Started
+## Tailwind v4 Notes
 
-```bash
-# 1. Install dependencies
-npm install
-
-# 2. Start dev server
-npm run dev
-
-# 3. Open
-http://localhost:3000
-```
+- No `tailwind.config.ts` — config lives in `globals.css` under `@theme {}`
+- PostCSS uses `@tailwindcss/postcss` (not the old `tailwindcss` plugin)
+- `@import "tailwindcss"` replaces the old `@tailwind base/components/utilities`
+- Custom utilities defined with `@utility` instead of `@layer utilities`
 
 ---
 
-## PWA
+## Pages
 
-The site is PWA-ready. On mobile, users will get an "Add to Home Screen" prompt.
-
-For full PWA support, add icons:
-- `public/icons/icon-192.png` — 192×192px
-- `public/icons/icon-512.png` — 512×512px
-
-Use a purple (#7B3FE4) background with a white "V" logo.
-
----
-
-## Design System
-
-### Colors
-
-| Token       | Hex       | Usage                     |
-|-------------|-----------|---------------------------|
-| `void`      | `#0D0719` | Deep background           |
-| `surface`   | `#130D26` | Section backgrounds       |
-| `card`      | `#1A1032` | Card backgrounds          |
-| `primary`   | `#7B3FE4` | CTAs, accents, badges     |
-| `pri-light` | `#9D68F0` | Hover states              |
-| `lavender`  | `#C4B5FD` | Text accents, soft glow   |
-| `mist`      | `#EDE9FE` | Light surfaces            |
-| `ice`       | `#E0E7FF` | Secondary light           |
-
-### Fonts
-
-- **Display / Headings:** Syne (700, 800)
-- **Body / UI:** Plus Jakarta Sans (400, 500, 600, 700)
+| Route               | Page                |
+|---------------------|---------------------|
+| `/`                 | Landing             |
+| `/events`           | Events Feed         |
+| `/events/[id]`      | Event Detail        |
+| `/organizers`       | Organizers List     |
+| `/organizers/[id]`  | Organizer Profile   |
 
 ---
 
-## Image Placeholders — What to Download
+## Design Tokens (in globals.css @theme)
 
-Every `img-slot` in the UI has a comment describing exactly what image to use.
-Search Pinterest or Unsplash with the search terms provided.
+| Token        | Hex       | Use                    |
+|--------------|-----------|------------------------|
+| void         | #0D0719   | Deep background        |
+| surface      | #130D26   | Section bg             |
+| card         | #1A1032   | Card fill              |
+| primary      | #7B3FE4   | Purple — CTAs, badges  |
+| pri-light    | #9D68F0   | Hover                  |
+| lavender     | #C4B5FD   | Text accents           |
+| mist         | #EDE9FE   | Light elements         |
+| ice          | #E0E7FF   | Secondary light        |
 
-### Hero Section
-- **Hero event card banner** — Lagos tech conference crowd, dark-toned
-  - Pinterest: `"tech conference photography Lagos Africa dark"`
-  - Size: 600×340px minimum, 16:9
+**Fonts:**
+- Headings: Syne 700 (not 800–900 — prevents compressed/stretched look)
+- Body/UI: Plus Jakarta Sans 400–700
 
-### Featured Events (×3)
-- **Lagos Dev Summit** — developer crowd, speaker on stage
-  - Pinterest: `"developer conference photography Nigeria dark"`
-- **Design Unplugged** — creative workshop, warm-lit, design tools
-  - Pinterest: `"design conference workshop photography dark warm"`
-- **Startup Grind** — pitch stage, entrepreneurs, energetic
-  - Pinterest: `"startup pitch event Nigeria Africa photography"`
+---
 
-### Organizer Logos (×4)
-Download directly from official websites:
+## Replacing Image Placeholders
+
+Every image area in the code has a comment showing what photo to use.
+Look for `{event.photoQuery}` and `{org.coverQuery}` in `src/lib/data.ts`.
+
+### Event Images
+Each event card shows a rich gradient until you add a real photo.
+To add photos:
+1. Find the `photoQuery` for each event in `src/lib/data.ts`
+2. Search Pinterest or Unsplash with that query
+3. Download the image
+4. Add to `public/images/events/[id].jpg`
+5. Replace the gradient `div` in EventCard with `<Image>` from `next/image`
+
+### Organizer Logos
+Download official logos from each organizer's website.
 - GDG Lagos → gdg.community/lagos
 - Design Week NG → designweekng.com
 - Startup Grind Lagos → startupgrind.com/lagos
 - Ingressive for Good → ingressive4good.org
 
-### Speaker Headshots (Event Detail page)
-- Professional LinkedIn photos or speaker bio photos
-- Format: Square, min 200×200px, clean background
+### Organizer Covers
+Wide event photography from each organizer's Instagram/Twitter.
+Size: 1440×280px minimum.
+
+### Speaker Headshots
+LinkedIn profile photos or speaker bio pages.
+Format: Square, minimum 200×200px.
+
+---
+
+## PWA Icons
+
+Add to `public/icons/`:
+- `icon-192.png` — 192×192px
+- `icon-512.png` — 512×512px
+
+Design: Purple (#7B3FE4) background + white "V"
 
 ---
 
@@ -104,34 +115,28 @@ Download directly from official websites:
 ```
 verivent/
 ├── public/
-│   ├── manifest.json          # PWA manifest
-│   └── icons/                 # PWA icons (add icon-192.png, icon-512.png)
+│   ├── manifest.json
+│   └── icons/
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx         # Root layout, fonts, PWA meta
-│   │   ├── page.tsx           # Landing page
-│   │   └── globals.css        # Design system, animations
-│   └── components/
-│       ├── Navbar.tsx         # Sticky nav with mobile menu
-│       ├── Footer.tsx         # Site footer
-│       ├── EventCard.tsx      # Reusable event card
-│       └── LenisProvider.tsx  # Smooth scroll init
+│   │   ├── layout.tsx
+│   │   ├── page.tsx              ← Landing
+│   │   ├── globals.css           ← Tailwind v4 @theme config
+│   │   ├── events/
+│   │   │   ├── page.tsx          ← Feed
+│   │   │   └── [id]/page.tsx     ← Detail
+│   │   └── organizers/
+│   │       ├── page.tsx          ← List
+│   │       └── [id]/page.tsx     ← Profile
+│   ├── components/
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── EventCard.tsx         ← Redesigned with real verified badge
+│   │   ├── VerifiedBadge.tsx     ← Twitter/Instagram/TikTok-style badge
+│   │   └── LenisProvider.tsx
+│   └── lib/
+│       └── data.ts               ← All mock data + types
 ```
-
----
-
-## Pages Roadmap
-
-| Phase | Page                  | Status      |
-|-------|-----------------------|-------------|
-| 1     | Landing (`/`)         | ✅ Done     |
-| 1     | Events Feed           | Coming next |
-| 1     | Event Detail          | Coming next |
-| 1     | Organizer Profile     | Coming next |
-| 2     | Sign Up / Login       | Phase 2     |
-| 2     | User Dashboard        | Phase 2     |
-| 3     | Organizer Dashboard   | Phase 3     |
-| 4     | Admin Panel           | Phase 4     |
 
 ---
 
