@@ -1,11 +1,11 @@
-/* ─── Google Fonts — must come BEFORE @tailwind directives ───── */
+/* ─── Google Fonts — MUST be first ──────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── CSS Custom Properties ──────────────────────────────────── */
+/* ─── CSS Variables ──────────────────────────────────────────── */
 :root {
   --color-void:      #0D0719;
   --color-surface:   #130D26;
@@ -43,9 +43,7 @@ a { text-decoration: none; }
   margin-inline: auto;
   padding-inline: 1.25rem;
 }
-@media (min-width: 768px) {
-  .container-page { padding-inline: 1.5rem; }
-}
+@media (min-width: 768px) { .container-page { padding-inline: 1.5rem; } }
 
 /* ─── Grid background ────────────────────────────────────────── */
 .grid-bg {
@@ -76,7 +74,7 @@ a { text-decoration: none; }
   will-change: transform;
 }
 
-/* ─── Nav ────────────────────────────────────────────────────── */
+/* ─── Nav glass ──────────────────────────────────────────────── */
 .nav-glass {
   background: rgba(13,7,25,0.80);
   backdrop-filter: blur(24px);
@@ -100,10 +98,7 @@ a { text-decoration: none; }
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg,
-    rgba(123,63,228,0.5) 0%,
-    rgba(196,181,253,0.15) 50%,
-    rgba(123,63,228,0.5) 100%);
+  background: linear-gradient(135deg, rgba(123,63,228,0.5) 0%, rgba(196,181,253,0.15) 50%, rgba(123,63,228,0.5) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -112,91 +107,41 @@ a { text-decoration: none; }
 
 /* ─── Buttons ────────────────────────────────────────────────── */
 .btn-pri {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   background: linear-gradient(135deg, #7B3FE4, #9D68F0);
-  color: #fff;
-  font-family: var(--font-body);
-  font-weight: 600;
-  border-radius: 99px;
-  border: none;
+  color: #fff; font-family: var(--font-body); font-weight: 600;
+  border-radius: 99px; border: none;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .btn-pri:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(123,63,228,0.4); }
+.btn-pri:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
 
 .btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 1px solid rgba(196,181,253,0.22);
-  color: rgba(240,234,255,0.55);
-  font-family: var(--font-body);
-  font-weight: 500;
-  border-radius: 99px;
-  background: transparent;
-  transition: all 0.25s ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 1px solid rgba(196,181,253,0.22); color: rgba(240,234,255,0.55);
+  font-family: var(--font-body); font-weight: 500; border-radius: 99px;
+  background: transparent; transition: all 0.25s ease;
 }
 .btn-ghost:hover { background: rgba(196,181,253,0.06); border-color: rgba(196,181,253,0.4); color: #F0EAFF; }
 
-/* ─── Event card hover ───────────────────────────────────────── */
+/* ─── Event card ─────────────────────────────────────────────── */
 .e-card { transition: transform 0.32s ease, box-shadow 0.32s ease; cursor: pointer; }
 .e-card:hover { transform: translateY(-4px); box-shadow: 0 20px 56px rgba(123,63,228,0.15); }
 
 /* ─── Section label ──────────────────────────────────────────── */
-.sec-label {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
-}
-.sec-label span {
-  font-size: 0.67rem; font-weight: 700; color: var(--color-primary);
-  letter-spacing: 0.15em; text-transform: uppercase; font-family: var(--font-body);
-}
+.sec-label { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.sec-label span { font-size: 0.67rem; font-weight: 700; color: var(--color-primary); letter-spacing: 0.15em; text-transform: uppercase; font-family: var(--font-body); }
 .sec-label::before, .sec-label::after { content: ''; height: 1px; width: 24px; background: var(--color-primary); }
 .sec-label-left { justify-content: flex-start; }
 .sec-label-left::after { display: none; }
 .sec-label-center { justify-content: center; }
 
-/* ─── Typography — fixed weights ────────────────────────────────
-   Syne 700 is visually bold enough. Going heavier (800-900)
-   causes the "compressed / stretched" look you were seeing.
-──────────────────────────────────────────────────────────────── */
-.h-hero {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.4rem, 5.5vw, 4rem);
-  line-height: 1.06;
-  letter-spacing: -0.025em;
-}
-.h-xl {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2rem, 4vw, 3.25rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-.h-lg {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  line-height: 1.15;
-  letter-spacing: -0.018em;
-}
-.h-md {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.2rem;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
-.h-sm {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1rem;
-  line-height: 1.35;
-  letter-spacing: -0.005em;
-}
+/* ─── Typography — fixed weights ────────────────────────────── */
+.h-hero { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.4rem, 5.5vw, 4rem); line-height: 1.06; letter-spacing: -0.025em; }
+.h-xl   { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.1; letter-spacing: -0.02em; }
+.h-lg   { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.15; letter-spacing: -0.018em; }
+.h-md   { font-family: var(--font-display); font-weight: 600; font-size: 1.2rem; line-height: 1.3; letter-spacing: -0.01em; }
+.h-sm   { font-family: var(--font-display); font-weight: 600; font-size: 1rem; line-height: 1.35; letter-spacing: -0.005em; }
 
 /* ─── Category tags ──────────────────────────────────────────── */
 .tag { font-size: 0.68rem; padding: 3px 10px; border-radius: 99px; font-weight: 600; font-family: var(--font-body); }
@@ -208,17 +153,67 @@ a { text-decoration: none; }
 .tag-comm      { background: rgba(59,130,246,0.16); color: #93C5FD; }
 
 /* ─── Event image areas ──────────────────────────────────────── */
-/* These are the gradient backgrounds. Real photos overlay on top.  */
-/* When you add a photo with the correct filename it shows on top.  */
-.ev-img {
-  position: relative;
-  overflow: hidden;
-}
+.ev-img { position: relative; overflow: hidden; }
 .ev-img-tech      { background: linear-gradient(135deg, #2D1B69 0%, #0D0719 60%, #1a0a3a 100%); }
 .ev-img-design    { background: linear-gradient(135deg, #4a0e2b 0%, #0D0719 60%, #2d0a20 100%); }
 .ev-img-startup   { background: linear-gradient(135deg, #0a2e1a 0%, #0D0719 60%, #0a1f14 100%); }
 .ev-img-career    { background: linear-gradient(135deg, #2e1a00 0%, #0D0719 60%, #1f1200 100%); }
 .ev-img-community { background: linear-gradient(135deg, #0a1a3a 0%, #0D0719 60%, #051228 100%); }
+
+/* ─── Form inputs ────────────────────────────────────────────── */
+.form-input {
+  width: 100%; background: rgba(26,16,50,0.6);
+  border: 1px solid rgba(196,181,253,0.12);
+  border-radius: 14px; padding: 14px 16px;
+  font-size: 0.9rem; color: #F0EAFF;
+  font-family: var(--font-body); outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.form-input::placeholder { color: rgba(240,234,255,0.22); }
+.form-input:focus { border-color: rgba(123,63,228,0.5); box-shadow: 0 0 0 3px rgba(123,63,228,0.1); }
+.form-input.error { border-color: rgba(239,68,68,0.5); }
+
+.form-label {
+  display: block; font-size: 0.8rem; font-weight: 600;
+  color: rgba(240,234,255,0.6); margin-bottom: 8px;
+  font-family: var(--font-body); letter-spacing: 0.02em;
+}
+
+/* ─── Auth card ──────────────────────────────────────────────── */
+.auth-card {
+  background: linear-gradient(145deg, #1A1032, #130D26);
+  border: 1px solid rgba(196,181,253,0.1);
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%;
+  max-width: 440px;
+}
+@media (max-width: 480px) { .auth-card { padding: 28px 20px; border-radius: 20px; } }
+
+/* ─── Divider ────────────────────────────────────────────────── */
+.divider {
+  display: flex; align-items: center; gap: 12px; margin: 20px 0;
+}
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(196,181,253,0.1); }
+.divider span { font-size: 0.72rem; color: rgba(240,234,255,0.28); font-family: var(--font-body); white-space: nowrap; }
+
+/* ─── Dashboard sidebar ──────────────────────────────────────── */
+.dash-sidebar {
+  width: 240px; flex-shrink: 0;
+  background: linear-gradient(145deg, #1A1032, #130D26);
+  border-right: 1px solid rgba(196,181,253,0.07);
+  min-height: 100vh; padding: 24px 16px;
+}
+.dash-nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: 12px;
+  font-size: 0.85rem; font-family: var(--font-body);
+  color: rgba(240,234,255,0.42); transition: all 0.2s ease;
+  cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+}
+.dash-nav-item:hover { background: rgba(196,181,253,0.06); color: rgba(240,234,255,0.75); }
+.dash-nav-item.active { background: rgba(123,63,228,0.16); color: #C4B5FD; }
+.dash-nav-item svg { flex-shrink: 0; }
 
 /* ─── Chip / filter ──────────────────────────────────────────── */
 .chip {
@@ -227,9 +222,7 @@ a { text-decoration: none; }
   color: rgba(240,234,255,0.38); cursor: pointer;
   transition: all 0.22s ease; font-family: var(--font-body); white-space: nowrap;
 }
-.chip:hover, .chip.active {
-  background: rgba(123,63,228,0.22); border-color: rgba(123,63,228,0.5); color: #C4B5FD;
-}
+.chip:hover, .chip.active { background: rgba(123,63,228,0.22); border-color: rgba(123,63,228,0.5); color: #C4B5FD; }
 
 /* ─── Progress bar ───────────────────────────────────────────── */
 .prog-bar  { height: 4px; border-radius: 99px; background: rgba(255,255,255,0.07); overflow: hidden; }
@@ -246,50 +239,25 @@ a { text-decoration: none; }
 .search-input:focus { border-color: rgba(123,63,228,0.45); }
 
 /* ─── Sidebar filters ────────────────────────────────────────── */
-.filter-label {
-  font-size: 0.63rem; font-weight: 700; color: rgba(240,234,255,0.22);
-  letter-spacing: 0.13em; text-transform: uppercase;
-  font-family: var(--font-body); margin-bottom: 10px;
-}
-.filter-opt {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 12px; border-radius: 10px; cursor: pointer;
-  transition: background 0.2s ease; font-size: 0.82rem;
-  font-family: var(--font-body); color: rgba(240,234,255,0.42);
-  width: 100%; background: none; border: none; text-align: left;
-}
+.filter-label { font-size: 0.63rem; font-weight: 700; color: rgba(240,234,255,0.22); letter-spacing: 0.13em; text-transform: uppercase; font-family: var(--font-body); margin-bottom: 10px; }
+.filter-opt { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; cursor: pointer; transition: background 0.2s ease; font-size: 0.82rem; font-family: var(--font-body); color: rgba(240,234,255,0.42); width: 100%; background: none; border: none; text-align: left; }
 .filter-opt:hover { background: rgba(196,181,253,0.05); color: rgba(240,234,255,0.75); }
 .filter-opt.active { background: rgba(123,63,228,0.14); color: #C4B5FD; }
 .filter-opt .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(196,181,253,0.18); flex-shrink: 0; }
 .filter-opt.active .dot { background: #7B3FE4; }
 
 /* ─── Toggle ─────────────────────────────────────────────────── */
-.toggle-track {
-  width: 38px; height: 21px; border-radius: 99px;
-  background: rgba(196,181,253,0.1); border: 1px solid rgba(196,181,253,0.18);
-  position: relative; cursor: pointer; transition: background 0.25s ease; flex-shrink: 0;
-}
+.toggle-track { width: 38px; height: 21px; border-radius: 99px; background: rgba(196,181,253,0.1); border: 1px solid rgba(196,181,253,0.18); position: relative; cursor: pointer; transition: background 0.25s ease; flex-shrink: 0; }
 .toggle-track.on { background: rgba(123,63,228,0.5); border-color: rgba(123,63,228,0.6); }
-.toggle-thumb {
-  width: 15px; height: 15px; border-radius: 50%; background: rgba(196,181,253,0.35);
-  position: absolute; top: 2px; left: 2px; transition: all 0.25s ease;
-}
+.toggle-thumb { width: 15px; height: 15px; border-radius: 50%; background: rgba(196,181,253,0.35); position: absolute; top: 2px; left: 2px; transition: all 0.25s ease; }
 .toggle-track.on .toggle-thumb { left: 19px; background: #C4B5FD; }
 
 /* ─── Page header ────────────────────────────────────────────── */
-.page-header {
-  padding-top: 96px; padding-bottom: 56px;
-  border-bottom: 1px solid rgba(196,181,253,0.06);
-  position: relative; overflow: hidden;
-}
+.page-header { padding-top: 96px; padding-bottom: 56px; border-bottom: 1px solid rgba(196,181,253,0.06); position: relative; overflow: hidden; }
 
 /* ─── Marquee ────────────────────────────────────────────────── */
 @keyframes marqueeScroll { to { transform: translateX(-50%); } }
-.marquee-inner {
-  animation: marqueeScroll 30s linear infinite;
-  display: flex; align-items: center; gap: 40px;
-  white-space: nowrap; width: max-content;
-}
+.marquee-inner { animation: marqueeScroll 30s linear infinite; display: flex; align-items: center; gap: 40px; white-space: nowrap; width: max-content; }
 
 /* ─── Float animations ───────────────────────────────────────── */
 @keyframes flt1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
@@ -300,3 +268,7 @@ a { text-decoration: none; }
 /* ─── Pulse dot ──────────────────────────────────────────────── */
 @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(0.85)} }
 .pulse-dot { animation: pulseDot 2s ease-in-out infinite; }
+
+/* ─── Spinner ────────────────────────────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { animation: spin 0.8s linear infinite; }

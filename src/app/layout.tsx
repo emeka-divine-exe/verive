@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { Navbar } from '@/components/Navbar'
+import { ConditionalNav } from '@/components/ConditionalNav'
 import { LenisProvider } from '@/components/LenisProvider'
 
 export const metadata: Metadata = {
   title: { default: 'Verivent — Discover Verified Events', template: '%s | Verivent' },
-  description: 'Curated, verified tech, design, and startup events across Africa. Find the right opportunity before everyone else does.',
+  description: 'Curated, verified tech, design, and startup events across Africa.',
   manifest: '/manifest.json',
   appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'Verivent' },
 }
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <LenisProvider />
-        <Navbar />
+        <ConditionalNav />
         <main>{children}</main>
       </body>
     </html>
