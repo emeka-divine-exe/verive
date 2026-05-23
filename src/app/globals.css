@@ -1,25 +1,23 @@
+/* ─── Google Fonts — must come BEFORE @tailwind directives ───── */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Google Fonts ───────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
-
-/* ─── @theme — replaces tailwind.config.ts entirely ─────────── */
-
+/* ─── CSS Custom Properties ──────────────────────────────────── */
 :root {
-  --color-void: #0D0719;
-  --color-surface: #130D26;
-  --color-card: #1A1032;
-  --color-primary: #7B3FE4;
+  --color-void:      #0D0719;
+  --color-surface:   #130D26;
+  --color-card:      #1A1032;
+  --color-primary:   #7B3FE4;
   --color-pri-light: #9D68F0;
-  --color-lavender: #C4B5FD;
-  --color-mist: #EDE9FE;
-  --color-ice: #E0E7FF;
-  --color-fg: #F0EAFF;
-
-  --font-display: "Syne", sans-serif;
-  --font-body: "Plus Jakarta Sans", sans-serif;
+  --color-lavender:  #C4B5FD;
+  --color-mist:      #EDE9FE;
+  --color-ice:       #E0E7FF;
+  --color-fg:        #F0EAFF;
+  --font-display:    'Syne', sans-serif;
+  --font-body:       'Plus Jakarta Sans', sans-serif;
 }
 
 /* ─── Base ───────────────────────────────────────────────────── */
@@ -39,49 +37,7 @@ body {
 button { cursor: pointer; }
 a { text-decoration: none; }
 
-/* ─── Typography — FIXED ─────────────────────────────────────
-   Root cause of "compressed/stretched" headers:
-   font-extrabold (800–900) on Syne is too heavy at large sizes.
-   Syne 700 is already visually bold by design. We go no heavier.
-   Line-height and letter-spacing are calibrated by size range.
-──────────────────────────────────────────────────────────────── */
-.h-hero {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.4rem, 5.5vw, 4rem);
-  line-height: 1.06;
-  letter-spacing: -0.025em;
-}
-.h-xl {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2rem, 4vw, 3.25rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-.h-lg {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  line-height: 1.15;
-  letter-spacing: -0.018em;
-}
-.h-md {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.2rem;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
-.h-sm {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1rem;
-  line-height: 1.35;
-  letter-spacing: -0.005em;
-}
-
-/* ─── Layout helpers ─────────────────────────────────────────── */
+/* ─── Layout ─────────────────────────────────────────────────── */
 .container-page {
   max-width: 80rem;
   margin-inline: auto;
@@ -111,7 +67,7 @@ a { text-decoration: none; }
 .glow    { box-shadow: 0 0 40px rgba(123,63,228,0.28); }
 .glow-sm { box-shadow: 0 0 20px rgba(123,63,228,0.18); }
 
-/* ─── Orb — decorative background blobs ─────────────────────── */
+/* ─── Orbs ───────────────────────────────────────────────────── */
 .orb {
   position: absolute;
   border-radius: 50%;
@@ -136,7 +92,7 @@ a { text-decoration: none; }
 }
 .gcard:hover { border-color: rgba(123,63,228,0.28); }
 
-/* ─── Gradient animated border ───────────────────────────────── */
+/* ─── Animated border ────────────────────────────────────────── */
 .anim-border { position: relative; }
 .anim-border::before {
   content: '';
@@ -185,29 +141,62 @@ a { text-decoration: none; }
 }
 .btn-ghost:hover { background: rgba(196,181,253,0.06); border-color: rgba(196,181,253,0.4); color: #F0EAFF; }
 
-/* ─── Event card ─────────────────────────────────────────────── */
+/* ─── Event card hover ───────────────────────────────────────── */
 .e-card { transition: transform 0.32s ease, box-shadow 0.32s ease; cursor: pointer; }
 .e-card:hover { transform: translateY(-4px); box-shadow: 0 20px 56px rgba(123,63,228,0.15); }
 
 /* ─── Section label ──────────────────────────────────────────── */
 .sec-label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
 }
 .sec-label span {
-  font-size: 0.67rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-family: var(--font-body);
+  font-size: 0.67rem; font-weight: 700; color: var(--color-primary);
+  letter-spacing: 0.15em; text-transform: uppercase; font-family: var(--font-body);
 }
 .sec-label::before, .sec-label::after { content: ''; height: 1px; width: 24px; background: var(--color-primary); }
 .sec-label-left { justify-content: flex-start; }
 .sec-label-left::after { display: none; }
 .sec-label-center { justify-content: center; }
+
+/* ─── Typography — fixed weights ────────────────────────────────
+   Syne 700 is visually bold enough. Going heavier (800-900)
+   causes the "compressed / stretched" look you were seeing.
+──────────────────────────────────────────────────────────────── */
+.h-hero {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+.h-xl {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.h-lg {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+}
+.h-md {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.h-sm {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
 
 /* ─── Category tags ──────────────────────────────────────────── */
 .tag { font-size: 0.68rem; padding: 3px 10px; border-radius: 99px; font-weight: 600; font-family: var(--font-body); }
@@ -218,17 +207,12 @@ a { text-decoration: none; }
 .tag-community { background: rgba(59,130,246,0.16); color: #93C5FD; }
 .tag-comm      { background: rgba(59,130,246,0.16); color: #93C5FD; }
 
-/* ─── Event image areas — intentional gradients, no placeholder text ── */
+/* ─── Event image areas ──────────────────────────────────────── */
+/* These are the gradient backgrounds. Real photos overlay on top.  */
+/* When you add a photo with the correct filename it shows on top.  */
 .ev-img {
   position: relative;
   overflow: hidden;
-  background-size: 200% 200%;
-  animation: imgShimmer 8s ease infinite;
-}
-@keyframes imgShimmer {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 .ev-img-tech      { background: linear-gradient(135deg, #2D1B69 0%, #0D0719 60%, #1a0a3a 100%); }
 .ev-img-design    { background: linear-gradient(135deg, #4a0e2b 0%, #0D0719 60%, #2d0a20 100%); }
@@ -236,89 +220,42 @@ a { text-decoration: none; }
 .ev-img-career    { background: linear-gradient(135deg, #2e1a00 0%, #0D0719 60%, #1f1200 100%); }
 .ev-img-community { background: linear-gradient(135deg, #0a1a3a 0%, #0D0719 60%, #051228 100%); }
 
-/* Noise texture overlay on images */
-.ev-img::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: 0.35;
-  pointer-events: none;
+/* ─── Chip / filter ──────────────────────────────────────────── */
+.chip {
+  font-size: 0.72rem; padding: 7px 15px; border-radius: 99px;
+  border: 1px solid rgba(196,181,253,0.12); background: #1A1032;
+  color: rgba(240,234,255,0.38); cursor: pointer;
+  transition: all 0.22s ease; font-family: var(--font-body); white-space: nowrap;
 }
-
-/* Photo indicator (tiny, unobtrusive — for developer reference only) */
-.photo-hint {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(6px);
-  color: rgba(255,255,255,0.35);
-  font-size: 0.55rem;
-  font-family: var(--font-body);
-  padding: 3px 7px;
-  border-radius: 4px;
-  pointer-events: none;
-  z-index: 2;
-  letter-spacing: 0.05em;
+.chip:hover, .chip.active {
+  background: rgba(123,63,228,0.22); border-color: rgba(123,63,228,0.5); color: #C4B5FD;
 }
 
 /* ─── Progress bar ───────────────────────────────────────────── */
 .prog-bar  { height: 4px; border-radius: 99px; background: rgba(255,255,255,0.07); overflow: hidden; }
 .prog-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #7B3FE4, #C4B5FD); }
 
-/* ─── Chip / filter ──────────────────────────────────────────── */
-.chip {
-  font-size: 0.72rem;
-  padding: 7px 15px;
-  border-radius: 99px;
-  border: 1px solid rgba(196,181,253,0.12);
-  background: #1A1032;
-  color: rgba(240,234,255,0.38);
-  cursor: pointer;
-  transition: all 0.22s ease;
-  font-family: var(--font-body);
-  white-space: nowrap;
-}
-.chip:hover, .chip.active {
-  background: rgba(123,63,228,0.22);
-  border-color: rgba(123,63,228,0.5);
-  color: #C4B5FD;
-}
-
 /* ─── Search input ───────────────────────────────────────────── */
 .search-input {
-  width: 100%;
-  background: #1A1032;
-  border: 1px solid rgba(196,181,253,0.1);
-  border-radius: 12px;
-  padding: 13px 16px 13px 44px;
-  font-size: 0.875rem;
-  color: rgba(240,234,255,0.75);
-  font-family: var(--font-body);
-  outline: none;
-  transition: border-color 0.25s ease;
+  width: 100%; background: #1A1032; border: 1px solid rgba(196,181,253,0.1);
+  border-radius: 12px; padding: 13px 16px 13px 44px;
+  font-size: 0.875rem; color: rgba(240,234,255,0.75);
+  font-family: var(--font-body); outline: none; transition: border-color 0.25s ease;
 }
 .search-input::placeholder { color: rgba(240,234,255,0.2); }
 .search-input:focus { border-color: rgba(123,63,228,0.45); }
 
-/* ─── Sidebar filter ─────────────────────────────────────────── */
+/* ─── Sidebar filters ────────────────────────────────────────── */
 .filter-label {
-  font-size: 0.63rem;
-  font-weight: 700;
-  color: rgba(240,234,255,0.22);
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  font-family: var(--font-body);
-  margin-bottom: 10px;
+  font-size: 0.63rem; font-weight: 700; color: rgba(240,234,255,0.22);
+  letter-spacing: 0.13em; text-transform: uppercase;
+  font-family: var(--font-body); margin-bottom: 10px;
 }
 .filter-opt {
   display: flex; align-items: center; gap: 10px;
-  padding: 9px 12px; border-radius: 10px;
-  cursor: pointer; transition: background 0.2s ease;
-  font-size: 0.82rem;
-  font-family: var(--font-body);
-  color: rgba(240,234,255,0.42);
+  padding: 9px 12px; border-radius: 10px; cursor: pointer;
+  transition: background 0.2s ease; font-size: 0.82rem;
+  font-family: var(--font-body); color: rgba(240,234,255,0.42);
   width: 100%; background: none; border: none; text-align: left;
 }
 .filter-opt:hover { background: rgba(196,181,253,0.05); color: rgba(240,234,255,0.75); }
@@ -329,8 +266,7 @@ a { text-decoration: none; }
 /* ─── Toggle ─────────────────────────────────────────────────── */
 .toggle-track {
   width: 38px; height: 21px; border-radius: 99px;
-  background: rgba(196,181,253,0.1);
-  border: 1px solid rgba(196,181,253,0.18);
+  background: rgba(196,181,253,0.1); border: 1px solid rgba(196,181,253,0.18);
   position: relative; cursor: pointer; transition: background 0.25s ease; flex-shrink: 0;
 }
 .toggle-track.on { background: rgba(123,63,228,0.5); border-color: rgba(123,63,228,0.6); }
@@ -342,25 +278,20 @@ a { text-decoration: none; }
 
 /* ─── Page header ────────────────────────────────────────────── */
 .page-header {
-  padding-top: 96px;
-  padding-bottom: 56px;
+  padding-top: 96px; padding-bottom: 56px;
   border-bottom: 1px solid rgba(196,181,253,0.06);
-  position: relative;
-  overflow: hidden;
+  position: relative; overflow: hidden;
 }
 
 /* ─── Marquee ────────────────────────────────────────────────── */
 @keyframes marqueeScroll { to { transform: translateX(-50%); } }
 .marquee-inner {
   animation: marqueeScroll 30s linear infinite;
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  white-space: nowrap;
-  width: max-content;
+  display: flex; align-items: center; gap: 40px;
+  white-space: nowrap; width: max-content;
 }
 
-/* ─── Float animations (hero cluster) ───────────────────────── */
+/* ─── Float animations ───────────────────────────────────────── */
 @keyframes flt1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
 @keyframes flt2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 .float-a { animation: flt1 7s ease-in-out infinite; }
@@ -369,8 +300,3 @@ a { text-decoration: none; }
 /* ─── Pulse dot ──────────────────────────────────────────────── */
 @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(0.85)} }
 .pulse-dot { animation: pulseDot 2s ease-in-out infinite; }
-
-/* ─── @utility ── custom v4 utilities ───────────────────────── */
-@utility text-fg-muted  { color: rgba(240,234,255,0.42); }
-@utility text-fg-subtle { color: rgba(240,234,255,0.26); }
-@utility border-subtle  { border-color: rgba(196,181,253,0.08); }
