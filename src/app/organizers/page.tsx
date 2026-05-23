@@ -37,7 +37,7 @@ function OrgCard({ org, index }: { org: typeof ORGANIZERS[0]; index: number }) {
 
           {/* Logo — drop at: public/images/organizers/logos/{org.id}.png */}
           <div className={`w-14 h-14 rounded-2xl ${org.avatarColor} flex items-center justify-center font-display font-bold text-sm flex-shrink-0 -mt-10 ring-4 relative overflow-hidden`}
-            style={{ color: '#C4B5FD', ringColor: '#0D0719', border: '1px solid rgba(196,181,253,0.12)' }}>
+            style={{ color: '#C4B5FD', '--tw-ring-color': '#0D0719', border: '1px solid rgba(196,181,253,0.12)' } as React.CSSProperties}>
             {!logoFailed ? (
               <Image
                 src={`/images/organizers/logos/${org.id}.png`}
