@@ -31,7 +31,7 @@ export default function DashboardPage() {
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {upcomingEvents.map((event) => (
-          <EventCard key={event.id} ev={event} />
+          <EventCard key={event.id} event={event} />
         ))}
       </div>
 
