@@ -1,22 +1,36 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { EventCard } from '@/components/EventCard'
 import { VerifiedBadge } from '@/components/VerifiedBadge'
 import { Footer } from '@/components/Footer'
-import { EVENTS, ORGANIZERS, CATEGORY_META } from '@/lib/data'
-import type { Category } from '@/lib/data'
+import { CATEGORY_META } from '@/lib/data'
+import { getEvents, getOrganizers } from '@/lib/supabase/queries'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const FEATURED = [EVENTS[0], EVENTS[1], EVENTS[2]]
 
 export default function LandingPage() {
+  const [events, setEvents] = useState<any[]>([])
+  const [organizers, setOrganizers] = useState<any[]>([])
+  const FEATURED = events.slice(0,3)
   const headRef  = useRef<HTMLDivElement>(null)
   const ctaRef   = useRef<HTMLDivElement>(null)
   const gridRef  = useRef<HTMLDivElement>(null)
+
+
+  useEffect(() => {
+    async function loadData() {
+      const eventsData = await getEvents()
+      const organizersData = await getOrganizers()
+      setEvents(eventsData)
+      setOrganizers(organizersData)
+    }
+
+    loadData()
+  }, [])
 
   /* Hero entrance */
   useEffect(() => {
@@ -86,7 +100,7 @@ export default function LandingPage() {
               {/* Social proof — organizer avatars */}
               <div className="flex items-center gap-4">
                 <div className="flex -space-x-2">
-  {ORGANIZERS.slice(0, 4).map((org, i) => (
+  {organizers.slice(0, 4).map((org, i) => (
     <div
       key={org.id}
       className={`w-9 h-9 rounded-full flex items-center justify-center text-[0.55rem] font-display font-bold ring-2 flex-shrink-0 ${org.avatarColor}`}
@@ -335,7 +349,7 @@ export default function LandingPage() {
 
             {/* Right — organizer profile rows */}
             <div className="space-y-3">
-              {ORGANIZERS.map((org, i) => (
+              {organizers.map((org, i) => (
                 <Link key={org.id} href={`/organizers/${org.id}`}
                   className={`sr gcard rounded-2xl p-5 flex items-center gap-4 group block ${i === 0 ? 'anim-border' : ''}`}>
 
