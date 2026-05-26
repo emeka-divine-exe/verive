@@ -6,11 +6,11 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { VerifiedBadge } from '@/components/VerifiedBadge'
 import { Footer } from '@/components/Footer'
-import { ORGANIZERS, CATEGORY_META } from '@/lib/data'
+import { getOrganizers } from '@/lib/supabase/queries'
 
 gsap.registerPlugin(ScrollTrigger)
 
-function OrgCard({ org, index }: { org: typeof ORGANIZERS[0]; index: number }) {
+function OrgCard({ org, index }: { org: any; index: number }) {
   const [coverFailed, setCoverFailed] = useState(false)
   const [logoFailed,  setLogoFailed]  = useState(false)
 
@@ -91,6 +91,11 @@ function OrgCard({ org, index }: { org: typeof ORGANIZERS[0]; index: number }) {
 }
 
 export default function OrganizersPage() {
+  const [organizers, setOrganizers] = useState<any[]>([])
+
+  useEffect(() => {
+    getOrganizers().then(setOrganizers)
+  }, [])
   useEffect(() => {
     const els = gsap.utils.toArray<HTMLElement>('.sr')
     els.forEach(el => gsap.from(el, {
@@ -121,7 +126,7 @@ export default function OrganizersPage() {
 
       <div className="container-page py-16 pb-24">
         <div className="grid md:grid-cols-2 gap-5">
-          {ORGANIZERS.map((org, i) => <OrgCard key={org.id} org={org} index={i} />)}
+          {organizers.map((org, i) => <OrgCard key={org.id} org={org} index={i} />)}
         </div>
       </div>
 
