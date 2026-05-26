@@ -7,6 +7,7 @@ import { EventCard } from '@/components/EventCard'
 import { VerifiedBadge } from '@/components/VerifiedBadge'
 import { Footer } from '@/components/Footer'
 import { getEvents } from '@/lib/supabase/queries'
+import { CATEGORY_META } from "@/lib/constants";
 import type { Category, Format } from '@/lib/supabase/queries'
 
 gsap.registerPlugin(ScrollTrigger)
