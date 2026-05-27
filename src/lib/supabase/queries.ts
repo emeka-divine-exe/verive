@@ -1,6 +1,3 @@
-export type Category = "tech" | "design" | "startup" | "career" | "community"
-export type Format = "in-person" | "online" | "hybrid"
-
 import { createClient } from './client'
 
 const supabase = createClient()
@@ -8,11 +5,28 @@ const supabase = createClient()
 export async function getEvents() {
   const { data, error } = await supabase
     .from('events')
-    .select('*, profiles:organizer_id(full_name, verified, avatar_url)')
-    .order('created_at', { ascending: false })
+    .select('*')
+    .eq('published', true)
+    .order('starts_at', { ascending: true })
 
   if (error) {
-    console.error(error)
+    console.error('getEvents error:', error)
+    return []
+  }
+
+  return data || []
+}
+
+export async function getFeaturedEvents() {
+  const { data, error } = await supabase
+    .from('events')
+    .select('*')
+    .eq('published', true)
+    .eq('featured', true)
+    .order('starts_at', { ascending: true })
+
+  if (error) {
+    console.error('getFeaturedEvents error:', error)
     return []
   }
 
@@ -22,12 +36,12 @@ export async function getEvents() {
 export async function getEventById(id: string) {
   const { data, error } = await supabase
     .from('events')
-    .select('*, profiles:organizer_id(full_name, verified, avatar_url)')
+    .select('*')
     .eq('id', id)
     .single()
 
   if (error) {
-    console.error(error)
+    console.error('getEventById error:', error)
     return null
   }
 
@@ -38,10 +52,10 @@ export async function getOrganizers() {
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
-    .in('role', ['organizer'])
+    .eq('role', 'organizer')
 
   if (error) {
-    console.error(error)
+    console.error('getOrganizers error:', error)
     return []
   }
 
