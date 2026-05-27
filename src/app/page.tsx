@@ -85,15 +85,17 @@ export default function LandingPage() {
 
               {/* Social proof — organizer avatars */}
               <div className="flex items-center gap-4">
-                <div className="flex -space-x-2">
-                  {ORGANIZERS.slice(0, 4).map((org, i) => (
-                    <div key={org.id}
-                      className={`w-9 h-9 rounded-full flex items-center justify-center text-[0.55rem] font-display font-bold ring-2 flex-shrink-0 ${org.avatarColor}`}
-                      style={{ color: '#C4B5FD', ringColor: '#0D0719', zIndex: 4 - i }}>
-                      {org.initials.charAt(0)}
-                    </div>
-                  ))}
-                </div>
+                <div
+  key={org.id}
+  className={`w-9 h-9 rounded-full flex items-center justify-center text-[0.55rem] font-display font-bold flex-shrink-0 ${org.avatarColor}`}
+  style={{
+    color: '#C4B5FD',
+    zIndex: 4 - i,
+    boxShadow: '0 0 0 2px #0D0719'
+  }}
+>
+  {org.initials.charAt(0)}
+</div>
                 <div>
                   <div className="text-sm font-body font-semibold" style={{ color: '#F0EAFF' }}>Trusted by real organizers</div>
                   <div className="text-xs font-body" style={{ color: 'rgba(240,234,255,0.32)' }}>GDG · Design Week NG · Startup Grind · i4G</div>
