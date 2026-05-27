@@ -6,6 +6,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { VerifiedBadge } from '@/components/VerifiedBadge'
 import { Footer } from '@/components/Footer'
+import { CATEGORY_META, CategoryKey } from '@/lib/constants'
 import { getOrganizers } from '@/lib/supabase/queries'
 
 gsap.registerPlugin(ScrollTrigger)
