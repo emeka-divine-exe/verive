@@ -6,9 +6,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { EventCard } from '@/components/EventCard'
 import { VerifiedBadge } from '@/components/VerifiedBadge'
 import { Footer } from '@/components/Footer'
-import { getEvents } from '@/lib/supabase/queries'
-import { CATEGORY_META } from "@/lib/constants";
-import type { Category, Format } from '@/lib/supabase/queries'
+import { EVENTS, CATEGORY_META } from '@/lib/data'
+import type { Category, Format } from '@/lib/data'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -42,13 +41,7 @@ function FeedContent() {
   const toggleCat = (cat: Category) =>
     setActiveCats(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat])
 
-  const [events, setEvents] = useState<any[]>([])
-
-  useEffect(() => {
-    getEvents().then(setEvents)
-  }, [])
-
-  const filtered = useMemo(() => events.filter((ev: any) => {
+  const filtered = useMemo(() => EVENTS.filter(ev => {
     if (search && !ev.title.toLowerCase().includes(search.toLowerCase()) &&
         !ev.organizer.toLowerCase().includes(search.toLowerCase())) return false
     if (activeCats.length > 0 && !activeCats.includes(ev.category)) return false
