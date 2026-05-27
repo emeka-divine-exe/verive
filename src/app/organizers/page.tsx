@@ -65,9 +65,14 @@ function OrgCard({ org, index }: { org: any; index: number }) {
         </div>
 
         <div className="flex flex-wrap gap-2 mt-4 mb-5">
-          {org.categories.map((cat: keyof typeof CATEGORY_META) => (
-            <span key={cat} className={`tag ${CATEGORY_META[cat].tagClass}`}>{CATEGORY_META[cat].label}</span>
-          ))}
+          {org.categories.map((cat: CategoryKey) => (
+  <span
+    key={cat}
+    className={`tag ${CATEGORY_META[cat].tagClass}`}
+  >
+    {CATEGORY_META[cat].label}
+  </span>
+))}
         </div>
 
         <div className="flex items-center gap-5 pt-4" style={{ borderTop: '1px solid rgba(196,181,253,0.07)' }}>
