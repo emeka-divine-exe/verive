@@ -1,133 +1,69 @@
-'use client'
+import Link from 'next/link'
 
-import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+const stats = [
+  { label: 'Published Events', value: '0' },
+  { label: 'Verified Organizers', value: '0' },
+  { label: 'Published Posts', value: '0' },
+  { label: 'Pending Reviews', value: '0' },
+]
 
-const supabase = createClient()
-
-export default function AdminPage() {
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
-
-  async function handleEventSubmit(formData: FormData) {
-    setLoading(true)
-    setMessage('')
-
-    const payload = {
-      title: formData.get('title'),
-      description: formData.get('description'),
-      category: formData.get('category'),
-      location: formData.get('location'),
-      starts_at: formData.get('starts_at'),
-      price: Number(formData.get('price') || 0),
-      published: true,
-      featured: false,
-    }
-
-    const { error } = await supabase.from('events').insert(payload)
-
-    if (error) {
-      setMessage(error.message)
-    } else {
-      setMessage('Event created successfully.')
-    }
-
-    setLoading(false)
-  }
-
-  async function handleOrganizerSubmit(formData: FormData) {
-    setLoading(true)
-    setMessage('')
-
-    const payload = {
-      full_name: formData.get('full_name'),
-      username: formData.get('username'),
-      role: 'organizer',
-      bio: formData.get('bio'),
-    }
-
-    const { error } = await supabase.from('profiles').insert(payload)
-
-    if (error) {
-      setMessage(error.message)
-    } else {
-      setMessage('Organizer created successfully.')
-    }
-
-    setLoading(false)
-  }
-
+export default function AdminDashboard() {
   return (
-    <div className="min-h-screen container-page py-20">
-      <div className="mb-12">
-        <div className="sec-label sec-label-left mb-6">
-          <span>Admin Dashboard</span>
-        </div>
-
-        <h1 className="h-xl mb-4" style={{ color: '#F0EAFF' }}>
-          Manage platform content.
-        </h1>
-
-        <p className="font-body max-w-2xl" style={{ color: 'rgba(240,234,255,0.38)' }}>
-          Create events, onboard organizers, and manage platform activity directly from Supabase.
+    <div>
+      <div className="mb-10">
+        <p className="text-sm uppercase tracking-[0.2em] text-violet-300 mb-4">Dashboard Overview</p>
+        <h1 className="text-5xl font-semibold text-white mb-4">Control your platform.</h1>
+        <p className="text-white/50 max-w-2xl">
+          Manage events, organizers, editorial content, and platform moderation from a centralized admin workspace.
         </p>
       </div>
 
-      {message && (
-        <div className="gcard rounded-2xl p-4 mb-8" style={{ color: '#F0EAFF' }}>
-          {message}
+      <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        {stats.map((stat) => (
+          <div key={stat.label} className="gcard rounded-3xl p-6">
+            <p className="text-white/40 text-sm mb-3">{stat.label}</p>
+            <h2 className="text-4xl font-bold text-white">{stat.value}</h2>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid xl:grid-cols-[1.2fr_0.8fr] gap-6">
+        <div className="gcard rounded-3xl p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-semibold text-white">Quick Actions</h2>
+              <p className="text-white/40 text-sm mt-1">Core management workflows.</p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <Link href="/admin/events" className="rounded-2xl border border-white/10 p-5 hover:bg-white/5 transition-colors">
+              <h3 className="text-lg font-semibold text-white mb-2">Manage Events</h3>
+              <p className="text-sm text-white/45">Create, feature, edit, and moderate platform events.</p>
+            </Link>
+
+            <Link href="/admin/organizers" className="rounded-2xl border border-white/10 p-5 hover:bg-white/5 transition-colors">
+              <h3 className="text-lg font-semibold text-white mb-2">Organizer Directory</h3>
+              <p className="text-sm text-white/45">Review organizer applications and verification status.</p>
+            </Link>
+
+            <Link href="/admin/posts" className="rounded-2xl border border-white/10 p-5 hover:bg-white/5 transition-colors">
+              <h3 className="text-lg font-semibold text-white mb-2">Publish Content</h3>
+              <p className="text-sm text-white/45">Manage editorial posts, announcements, and updates.</p>
+            </Link>
+          </div>
         </div>
-      )}
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        <form action={handleEventSubmit} className="gcard rounded-3xl p-8 space-y-5">
-          <div>
-            <h2 className="h-md mb-2" style={{ color: '#F0EAFF' }}>
-              Create Event
-            </h2>
-            <p className="text-sm" style={{ color: 'rgba(240,234,255,0.36)' }}>
-              Add new events directly into the Supabase database.
-            </p>
-          </div>
-
-          <input name="title" required placeholder="Event title" className="w-full rounded-xl bg-black/20 border border-white/10 p-4 text-white" />
-          <textarea name="description" required placeholder="Event description" className="w-full rounded-xl bg-black/20 border border-white/10 p-4 text-white min-h-[120px]" />
-          <input name="location" required placeholder="Location" className="w-full rounded-xl bg-black/20 border border-white/10 p-4 text-white" />
-
-          <select name="category" className="w-full rounded-xl bg-black/20 border border-white/10 p-4 text-white">
-            <option value="tech">Tech</option>
-            <option value="design">Design</option>
-            <option value="startup">Startup</option>
-            <option value="career">Career</option>
-            <option value="community">Community</option>
-          </select>
-
-          <input type="datetime-local" name="starts_at" required className="w-full rounded-xl bg-black/20 border border-white/10 p-4 text-white" />
-          <input type="number" name="price" placeholder="Price" className="w-full rounded-xl bg-black/20 border border-white/10 p-4 text-white" />
-
-          <button disabled={loading} className="btn-pri text-white font-semibold px-6 py-4 w-full">
-            {loading ? 'Saving...' : 'Publish Event'}
-          </button>
-        </form>
-
-        <form action={handleOrganizerSubmit} className="gcard rounded-3xl p-8 space-y-5">
-          <div>
-            <h2 className="h-md mb-2" style={{ color: '#F0EAFF' }}>
-              Add Organizer
-            </h2>
-            <p className="text-sm" style={{ color: 'rgba(240,234,255,0.36)' }}>
-              Register verified organizers and companies on the platform.
-            </p>
-          </div>
-
-          <input name="full_name" required placeholder="Organizer name" className="w-full rounded-xl bg-black/20 border border-white/10 p-4 text-white" />
-          <input name="username" required placeholder="Username" className="w-full rounded-xl bg-black/20 border border-white/10 p-4 text-white" />
-          <textarea name="bio" required placeholder="Short bio" className="w-full rounded-xl bg-black/20 border border-white/10 p-4 text-white min-h-[140px]" />
-
-          <button disabled={loading} className="btn-pri text-white font-semibold px-6 py-4 w-full">
-            {loading ? 'Saving...' : 'Create Organizer'}
-          </button>
-        </form>
+        <div className="gcard rounded-3xl p-8">
+          <h2 className="text-2xl font-semibold text-white mb-5">Foundation Phase</h2>
+          <ul className="space-y-4 text-sm text-white/55">
+            <li>• Database-first architecture with Supabase integration</li>
+            <li>• Event and organizer management foundation</li>
+            <li>• Content publishing workflow</li>
+            <li>• Expandable moderation system</li>
+            <li>• Scalable admin navigation structure</li>
+          </ul>
+        </div>
       </div>
     </div>
   )
