@@ -1,73 +1,42 @@
 import Link from 'next/link'
-import { Footer } from '@/components/Footer'
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen">
-      <section className="page-header">
-        <div className="container-page py-24">
-          <div className="max-w-3xl">
-            <div className="sec-label sec-label-left mb-6">
-              <span>About Verivent</span>
-            </div>
+    <main className="min-h-screen pt-28 pb-20">
+      <div className="container-page max-w-4xl">
+        <span className="text-xs uppercase tracking-[0.2em] font-semibold" style={{ color: '#7B3FE4' }}>
+          About Verivent
+        </span>
+        <h1 className="mt-4 text-5xl font-bold leading-tight" style={{ color: '#F0EAFF' }}>
+          Curated events. Verified organizers. Better discovery.
+        </h1>
+        <p className="mt-5 text-base leading-relaxed" style={{ color: 'rgba(240,234,255,0.45)' }}>
+          Verivent is a trust-first event discovery platform built for Africa&apos;s tech, design, and startup ecosystems.
+          The product now runs on Supabase instead of mock data, so the homepage, organizer pages, and event feeds respond to live records.
+        </p>
 
-            <h1 className="h-xl mb-6" style={{ color: '#F0EAFF' }}>
-              Discover verified tech and creative events across Africa.
-            </h1>
-
-            <p className="font-body text-lg leading-relaxed" style={{ color: 'rgba(240,234,255,0.42)' }}>
-              Verivent helps people discover high-quality events from trusted organizers.
-              Every listing on the platform is designed to be cleaner, easier to discover,
-              and more reliable than fragmented event posts scattered across social media.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="container-page py-20">
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-4 mt-10">
           {[
-            {
-              title: 'Verified Organizers',
-              body: 'Organizers are reviewed before events appear on the platform.',
-            },
-            {
-              title: 'Curated Discovery',
-              body: 'The platform prioritizes quality events instead of noisy feeds.',
-            },
-            {
-              title: 'Built For Africa',
-              body: 'Focused on African tech, startup, design, and career ecosystems.',
-            },
-          ].map((item) => (
-            <div key={item.title} className="gcard rounded-2xl p-6">
-              <h3 className="h-md mb-3" style={{ color: '#F0EAFF' }}>
-                {item.title}
-              </h3>
-
-              <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(240,234,255,0.38)' }}>
-                {item.body}
-              </p>
+            ['Verified discovery', 'Curate events that people can trust.'],
+            ['Organizer workflows', 'Manage profiles, events, media, and publishing.'],
+            ['Scalable foundation', 'Drive the UI from the database, not local arrays.'],
+          ].map(([title, desc]) => (
+            <div key={title} className="gcard rounded-2xl p-5">
+              <h2 className="font-display font-semibold text-lg mb-2" style={{ color: '#F0EAFF' }}>{title}</h2>
+              <p className="text-sm font-body" style={{ color: 'rgba(240,234,255,0.36)' }}>{desc}</p>
             </div>
           ))}
         </div>
 
-        <div className="mt-16 gcard rounded-3xl p-10 text-center">
-          <h2 className="h-lg mb-4" style={{ color: '#F0EAFF' }}>
-            Ready to discover your next event?
-          </h2>
-
-          <p className="font-body mb-8" style={{ color: 'rgba(240,234,255,0.38)' }}>
-            Browse verified opportunities from trusted communities and companies.
-          </p>
-
-          <Link href="/events" className="btn-pri text-white font-semibold px-8 py-4 inline-flex">
-            Browse Events
+        <div className="mt-10 flex gap-3">
+          <Link href="/events" className="btn-pri text-white font-semibold px-7 py-3.5 text-sm">
+            Explore Events
+          </Link>
+          <Link href="/organizers" className="btn-ghost px-7 py-3.5 text-sm">
+            Browse Organizers
           </Link>
         </div>
-      </section>
-
-      <Footer />
-    </div>
+      </div>
+    </main>
   )
 }
