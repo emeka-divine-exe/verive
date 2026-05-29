@@ -62,7 +62,7 @@ function OrgCard({ org }: { org: Organizer }) {
         </div>
 
         <div className="flex flex-wrap gap-2 mt-4 mb-5">
-          {org.categories.map((cat) => {
+          {(org.categories || []).map((cat) => {
             const meta = CATEGORY_META[cat]
             return (
               <span key={cat} className={`tag ${meta.tagClass}`}>
