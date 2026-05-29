@@ -41,6 +41,8 @@ export interface Event {
 
   imageUrl?:    string
 
+  ticketUrl?: string
+
   // NOTE: Replace src below with real event photo.
   // Search Pinterest for the query in photoQuery.
   photoQuery:   string
