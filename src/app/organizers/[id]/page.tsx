@@ -159,10 +159,10 @@ export default function OrganizerProfilePage({ params }: { params: { id: string 
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-14">
           {[
-            { v: organizer.eventsCount.toString(), l: 'Events Hosted' },
-            { v: organizer.attendees, l: 'Total Attendees' },
-            { v: `${organizer.rating || 0} ★`, l: 'Avg. Rating' },
-            { v: organizer.since.toString(), l: 'Member Since' },
+            { v: (organizer.eventsCount || 0).toString(), l: 'Events Hosted' },
+{ v: organizer.attendees || '0', l: 'Total Attendees' },
+{ v: `${organizer.rating || 0} ★`, l: 'Avg. Rating' },
+{ v: (organizer.since || new Date().getFullYear()).toString(), l: 'Member Since' },
           ].map(({ v, l }) => (
             <div key={l} className="gcard rounded-2xl p-5 text-center">
               <div className="font-display font-bold mb-1" style={{ color: '#F0EAFF', fontSize: '1.5rem' }}>{v}</div>
