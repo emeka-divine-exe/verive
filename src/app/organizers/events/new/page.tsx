@@ -1,115 +1,158 @@
 'use client'
-import { useState } from 'react'
+
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { createOrganizerEvent } from '@/lib/supabase/organizer'
+import { CATEGORY_META, FORMAT_META, type Category, type Format } from '@/lib/data'
 
-const CATEGORIES = ['Tech','Design','Startup','Career','Community']
-const FORMATS    = ['In-Person','Online','Hybrid']
+const STATUS_OPTIONS = [
+  { value: 'draft', label: 'Save as Draft' },
+  { value: 'pending', label: 'Submit for Review' },
+  { value: 'published', label: 'Publish Immediately' },
+] as const
 
 export default function PostEventPage() {
-  const router   = useRouter()
+  const router = useRouter()
   const supabase = createClient()
-
-  const [form, setForm] = useState({
-    title: '', description: '', category: '', format: '',
-    date: '', time: '', location: '', price: '', ticketUrl: '',
-  })
   const [loading, setLoading] = useState(false)
-  const [error,   setError]   = useState('')
-  const [done,    setDone]    = useState(false)
+  const [error, setError] = useState('')
+  const [done, setDone] = useState(false)
+  const [userId, setUserId] = useState('')
+  const [form, setForm] = useState({
+    title: '',
+    description: '',
+    longDesc: '',
+    category: 'tech' as Category,
+    format: 'in-person' as Format,
+    date: '',
+    time: '',
+    location: '',
+    price: '0',
+    capacity: '',
+    ticketUrl: '',
+    imageUrl: '',
+    status: 'draft' as 'draft' | 'pending' | 'published',
+    featured: false,
+  })
 
-  const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-    setForm(f => ({ ...f, [field]: e.target.value }))
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) setUserId(data.user.id)
+    })
+  }, [])
+
+  const set = (field: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      setForm((current) => ({ ...current, [field]: field === 'featured' ? (e.target as HTMLInputElement).checked : e.target.value } as any))
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setError(''); setLoading(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setError('You must be logged in.'); setLoading(false); return }
+    setError('')
+    setLoading(true)
 
-    const { error } = await supabase.from('events').insert({
-      title:       form.title,
-      description: form.description,
-      category:    form.category.toLowerCase(),
-      format:      form.format.toLowerCase().replace('-', ''),
-      date:        form.date,
-      time:        form.time,
-      location:    form.location,
-      price:       form.price === '0' || form.price === '' ? 0 : Number(form.price),
-      ticket_url:  form.ticketUrl,
-      organizer_id: user.id,
-      status:      'pending',   // admin reviews before publishing
-    })
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        setError('You must be logged in.')
+        return
+      }
 
-    if (error) { setError(error.message); setLoading(false); return }
-    setDone(true); setLoading(false)
+      await createOrganizerEvent(user.id, {
+        title: form.title,
+        description: form.description,
+        longDesc: form.longDesc,
+        category: form.category,
+        format: form.format,
+        date: form.date,
+        time: form.time,
+        location: form.location,
+        price: Number(form.price || 0),
+        ticketUrl: form.ticketUrl || undefined,
+        imageUrl: form.imageUrl || undefined,
+        status: form.status,
+        featured: form.featured,
+        capacity: form.capacity ? Number(form.capacity) : 0,
+        filled: 0,
+      })
+
+      setDone(true)
+    } catch (err: any) {
+      setError(err?.message || 'Unable to create event.')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  if (done) return (
-    <div className="p-6 md:p-10 max-w-lg">
-      <div className="gcard rounded-3xl p-12 text-center anim-border">
-        <div className="text-5xl mb-5">🎉</div>
-        <h2 className="h-lg mb-3" style={{ color: '#F0EAFF' }}>Event submitted!</h2>
-        <p className="font-body text-sm mb-7" style={{ color: 'rgba(240,234,255,0.4)' }}>
-          Your event has been submitted for review. We&apos;ll publish it once our team has approved it.
-        </p>
-        <div className="flex gap-3 justify-center">
-          <Link href="/organizer/events" className="btn-pri text-white font-semibold px-6 py-3 text-sm">My Events</Link>
-          <button onClick={() => setDone(false)} className="btn-ghost px-6 py-3 text-sm">Post Another</button>
+  if (done) {
+    return (
+      <div className="p-6 md:p-10 max-w-lg">
+        <div className="gcard rounded-3xl p-12 text-center anim-border">
+          <div className="text-5xl mb-5">🎉</div>
+          <h2 className="h-lg mb-3" style={{ color: '#F0EAFF' }}>Event saved!</h2>
+          <p className="font-body text-sm mb-7" style={{ color: 'rgba(240,234,255,0.4)' }}>
+            Your event has been saved to Supabase and is ready for the next step in your publishing workflow.
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Link href="/organizers/events" className="btn-pri text-white font-semibold px-6 py-3 text-sm">My Events</Link>
+            <button onClick={() => setDone(false)} className="btn-ghost px-6 py-3 text-sm">Create Another</button>
+          </div>
         </div>
       </div>
-    </div>
-  )
+    )
+  }
 
   return (
-    <div className="p-6 md:p-10 max-w-2xl">
-      <div className="flex items-center gap-3 mb-8">
-        <Link href="/organizer/dashboard" className="text-sm font-body flex items-center gap-1.5 transition-colors"
-          style={{ color: 'rgba(240,234,255,0.32)' }}>
+    <div className="p-6 md:p-10 max-w-3xl">
+      <div className="mb-6">
+        <Link href="/organizers/dashboard" className="text-sm font-body flex items-center gap-1.5 transition-colors" style={{ color: 'rgba(240,234,255,0.32)' }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Dashboard
         </Link>
       </div>
 
-      <h1 className="h-lg mb-1" style={{ color: '#F0EAFF' }}>Post New Event</h1>
+      <h1 className="h-lg mb-2" style={{ color: '#F0EAFF' }}>Post New Event</h1>
       <p className="font-body text-sm mb-8" style={{ color: 'rgba(240,234,255,0.35)' }}>
-        Fill in the details below. Your event will be reviewed before publishing.
+        Create a draft or publish immediately depending on your workflow.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-
         <div>
           <label className="form-label">Event title *</label>
-          <input type="text" className="form-input" placeholder="e.g. Lagos Developer Summit 2025"
-            value={form.title} onChange={set('title')} required />
+          <input type="text" className="form-input" placeholder="e.g. Lagos Developer Summit 2025" value={form.title} onChange={set('title')} required />
         </div>
 
         <div>
-          <label className="form-label">Description *</label>
-          <textarea className="form-input" rows={5} placeholder="Tell people what this event is about…"
-            value={form.description} onChange={set('description')} required
-            style={{ resize: 'vertical', minHeight: '120px' }} />
+          <label className="form-label">Short description *</label>
+          <textarea className="form-input" rows={3} placeholder="Summarize the event in one or two sentences…" value={form.description} onChange={set('description')} required style={{ resize: 'vertical', minHeight: '90px' }} />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="form-label">Long description</label>
+          <textarea className="form-input" rows={5} placeholder="Add more details about speakers, agenda, sponsors, and audience…" value={form.longDesc} onChange={set('longDesc')} style={{ resize: 'vertical', minHeight: '120px' }} />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="form-label">Category *</label>
             <select className="form-input" value={form.category} onChange={set('category')} required>
-              <option value="">Select category</option>
-              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+              {Object.entries(CATEGORY_META).map(([key, meta]) => (
+                <option key={key} value={key}>{meta.label}</option>
+              ))}
             </select>
           </div>
           <div>
             <label className="form-label">Format *</label>
             <select className="form-input" value={form.format} onChange={set('format')} required>
-              <option value="">Select format</option>
-              {FORMATS.map(f => <option key={f} value={f}>{f}</option>)}
+              {Object.entries(FORMAT_META).map(([key, meta]) => (
+                <option key={key} value={key}>{meta.label}</option>
+              ))}
             </select>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="form-label">Date *</label>
             <input type="date" className="form-input" value={form.date} onChange={set('date')} required />
@@ -122,21 +165,44 @@ export default function PostEventPage() {
 
         <div>
           <label className="form-label">Location / Platform *</label>
-          <input type="text" className="form-input"
-            placeholder="e.g. Landmark Centre, VI or Online · Zoom"
-            value={form.location} onChange={set('location')} required />
+          <input type="text" className="form-input" placeholder="e.g. Landmark Centre, VI or Online · Zoom" value={form.location} onChange={set('location')} required />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="form-label">Price (₦) — enter 0 for free</label>
-            <input type="number" className="form-input" placeholder="0" min="0"
-              value={form.price} onChange={set('price')} />
+            <input type="number" className="form-input" placeholder="0" min="0" value={form.price} onChange={set('price')} />
           </div>
           <div>
-            <label className="form-label">Ticket / Registration URL</label>
-            <input type="url" className="form-input" placeholder="https://eventbrite.com/…"
-              value={form.ticketUrl} onChange={set('ticketUrl')} />
+            <label className="form-label">Capacity</label>
+            <input type="number" className="form-input" placeholder="0" min="0" value={form.capacity} onChange={set('capacity')} />
+          </div>
+        </div>
+
+        <div>
+          <label className="form-label">Ticket / Registration URL</label>
+          <input type="url" className="form-input" placeholder="https://eventbrite.com/…" value={form.ticketUrl} onChange={set('ticketUrl')} />
+        </div>
+
+        <div>
+          <label className="form-label">Hero image URL</label>
+          <input type="url" className="form-input" placeholder="https://images.example.com/banner.jpg" value={form.imageUrl} onChange={set('imageUrl')} />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="form-label">Workflow state</label>
+            <select className="form-input" value={form.status} onChange={set('status')}>
+              {STATUS_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-end">
+            <label className="flex items-center gap-3 px-4 py-3 rounded-2xl w-full" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(196,181,253,0.12)' }}>
+              <input type="checkbox" checked={form.featured} onChange={(e) => setForm((current) => ({ ...current, featured: e.target.checked }))} />
+              <span className="font-body text-sm" style={{ color: '#F0EAFF' }}>Feature this event</span>
+            </label>
           </div>
         </div>
 
@@ -149,16 +215,13 @@ export default function PostEventPage() {
 
         <div className="pt-2 flex gap-3">
           <button type="submit" disabled={loading} className="btn-pri text-white font-semibold px-8 py-4 text-base flex-1">
-            {loading
-              ? <svg className="spinner w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" strokeOpacity=".25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
-              : 'Submit for Review'
-            }
+            {loading ? 'Saving…' : 'Save Event'}
           </button>
-          <Link href="/organizer/dashboard" className="btn-ghost px-6 py-4 text-base">Cancel</Link>
+          <Link href="/organizers/events" className="btn-ghost px-6 py-4 text-base">Cancel</Link>
         </div>
 
         <p className="text-xs font-body" style={{ color: 'rgba(240,234,255,0.22)' }}>
-          Your event will be reviewed by our team before going live. Verified organizers get faster review times.
+          Saved events respect your workflow state. Drafts stay private until published.
         </p>
       </form>
     </div>
