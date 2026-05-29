@@ -45,7 +45,7 @@ export interface Event {
   // Search Pinterest for the query in photoQuery.
   photoQuery:   string
 
-  status: 'draft' | 'pending' | 'published' | 'rejected'
+  status?: 'draft' | 'pending' | 'published' | 'rejected'
 
   featured?: boolean
 
