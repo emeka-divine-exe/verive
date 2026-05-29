@@ -81,7 +81,7 @@ export interface Organizer {
   suspended?: boolean
 
   // Metrics
-  eventsCount?: number
+  eventsCount: number
   totalEvents?: number
 
   attendees?: string
