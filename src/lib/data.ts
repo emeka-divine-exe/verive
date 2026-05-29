@@ -298,3 +298,67 @@ export const FORMAT_META: Record<Format, { label: string }> = {
   'online':    { label: 'Online' },
   'hybrid':    { label: 'Hybrid' },
 }
+
+/* ──────────────────────────────────────────────────────────────
+   Shared Helpers & Constants
+────────────────────────────────────────────────────────────── */
+
+export const CATEGORY_ORDER: Category[] = [
+  'tech',
+  'design',
+  'startup',
+  'career',
+  'community',
+]
+
+const COLOR_VARIANTS = [
+  'bg-primary/25',
+  'bg-pink-900/40',
+  'bg-emerald-900/40',
+  'bg-blue-900/40',
+  'bg-purple-900/40',
+  'bg-orange-900/40',
+]
+
+const GRADIENT_VARIANTS = [
+  'linear-gradient(135deg, rgba(79,124,255,0.35) 0%, rgba(10,10,10,1) 100%)',
+  'linear-gradient(135deg, rgba(236,72,153,0.35) 0%, rgba(10,10,10,1) 100%)',
+  'linear-gradient(135deg, rgba(16,185,129,0.35) 0%, rgba(10,10,10,1) 100%)',
+  'linear-gradient(135deg, rgba(59,130,246,0.35) 0%, rgba(10,10,10,1) 100%)',
+  'linear-gradient(135deg, rgba(168,85,247,0.35) 0%, rgba(10,10,10,1) 100%)',
+]
+
+function hashString(value: string) {
+  let hash = 0
+
+  for (let i = 0; i < value.length; i++) {
+    hash = value.charCodeAt(i) + ((hash << 5) - hash)
+  }
+
+  return Math.abs(hash)
+}
+
+export function makeInitials(value: string): string {
+  if (!value) return 'NA'
+
+  const parts = value
+    .trim()
+    .split(' ')
+    .filter(Boolean)
+
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toUpperCase()
+  }
+
+  return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+}
+
+export function colorFromSeed(seed: string): string {
+  const index = hashString(seed) % COLOR_VARIANTS.length
+  return COLOR_VARIANTS[index]
+}
+
+export function gradientFromSeed(seed: string): string {
+  const index = hashString(seed) % GRADIENT_VARIANTS.length
+  return GRADIENT_VARIANTS[index]
+}
