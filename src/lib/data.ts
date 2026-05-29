@@ -9,25 +9,37 @@ export interface Speaker {
 }
 
 export interface Event {
-  id:          string
+  id:           string
   title:        string
   description:  string
   longDesc:     string
+
   organizerId:  string
   organizer:    string
-  orgInitials:  string    // for avatar placeholder
-  orgColor:     string    // avatar bg color
+
+  orgInitials:  string
+  orgColor:     string
+
   date:         string
   dateRaw:      string
   time:         string
+
   location:     string
+
   format:       Format
   category:     Category
+
   price:        number | 'Free'
+
   badge?:       'featured' | 'free' | 'selling-fast'
+
   capacity:     number
   filled:       number
+
   speakers:     Speaker[]
+
+  imageUrl?:    string
+
   // NOTE: Replace src below with real event photo.
   // Search Pinterest for the query in photoQuery.
   photoQuery:   string
