@@ -46,27 +46,75 @@ export interface Event {
 }
 
 export interface Organizer {
-  id:          string
-  name:        string
-  initials:    string
-  bio:         string
-  longBio:     string
-  type:        string
-  categories:  Category[]
-  eventsCount: number
-  attendees:   string
-  rating:      number
-  since:       number
-  website:     string
-  twitter:     string
-  instagram:   string
-  avatarColor: string  // bg color for avatar placeholder
-  coverColor:  string  // gradient for cover placeholder
-  // NOTE: Download logo from website listed in `website` field
-  // NOTE: Cover photo — search photoQuery on Pinterest
-  coverQuery:  string
-  verified?: boolean
+  id: string
+
+  // Ownership
+  userId?: string
+
+  // Core identity
+  name: string
+  slug?: string
+  initials?: string
+
+  // Public info
+  bio: string
+  longBio?: string
+  description?: string
+  shortBio?: string
+
+  type: string
+  categories?: Category[]
+
+  // Branding
+  logo?: string
+  avatarUrl?: string
   coverUrl?: string
+
+  // Placeholder/fallback branding
+  avatarColor?: string
+  coverColor?: string
+  coverQuery?: string
+
+  // Verification & moderation
+  verified?: boolean
+  featured?: boolean
+  suspended?: boolean
+
+  // Metrics
+  eventsCount?: number
+  totalEvents?: number
+
+  attendees?: string
+  followersCount?: number
+
+  rating?: number
+  since?: number
+
+  // Contact
+  email?: string
+  phone?: string
+
+  // Socials
+  website?: string
+  twitter?: string
+  linkedin?: string
+  instagram?: string
+  github?: string
+  discord?: string
+
+  // Location
+  country?: string
+  city?: string
+
+  // SEO / discovery
+  tags?: string[]
+
+  // Admin workflow
+  applicationStatus?: 'pending' | 'approved' | 'rejected'
+
+  // Dates
+  createdAt?: string
+  updatedAt?: string
 }
 
 /* ── Mock Organizers ───────────────────────────────────────────── */
