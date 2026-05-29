@@ -3,6 +3,19 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 type CookieToSet = { name: string; value: string; options?: Record<string, unknown> }
 
+const ORGANIZER_PATHS = [
+  '/organizers/dashboard',
+  '/organizers/events',
+  '/organizers/media',
+  '/organizers/settings',
+  '/organizers/apply',
+]
+
+
+function redirectTo(url: string, request: NextRequest) {
+  return NextResponse.redirect(new URL(url, request.url))
+}
+
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
@@ -11,7 +24,9 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return request.cookies.getAll() },
+        getAll() {
+          return request.cookies.getAll()
+        },
         setAll(cookiesToSet: CookieToSet[]) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({ request })
@@ -23,47 +38,50 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
-
   const path = request.nextUrl.pathname
 
-  // Protected: user dashboard
-  if (path.startsWith('/dashboard') && !user) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  if (path === '/organizer' || path.startsWith('/organizer/')) {
+    const target = path.replace('/organizer', '/organizers')
+    return redirectTo(target, request)
   }
 
-  // Protected: organizer pages
-  if (
-    path.startsWith('/organizer/dashboard') ||
-    path.startsWith('/organizer/events') ||
-    path.startsWith('/organizer/settings')
-  ) {
-    if (!user) {
-      return NextResponse.redirect(new URL('/login', request.url))
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (path === '/login' || path === '/signup') {
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (profile?.role === 'organizer' || profile?.role === 'admin') {
+        return redirectTo('/organizers/dashboard', request)
+      }
+
+      return redirectTo('/dashboard', request)
     }
+
+    return supabaseResponse
+  }
+
+  if (path.startsWith('/dashboard')) {
+    if (!user) return redirectTo('/login', request)
+    return supabaseResponse
+  }
+
+  if (ORGANIZER_PATHS.some((prefix) => path === prefix || path.startsWith(`${prefix}/`))) {
+    if (!user) return redirectTo('/login', request)
+
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
 
     if (!profile || (profile.role !== 'organizer' && profile.role !== 'admin')) {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+      return redirectTo('/dashboard', request)
     }
-  }
-
-  // Redirect logged-in users away from auth pages
-  if (user && (path === '/login' || path === '/signup')) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (profile?.role === 'organizer' || profile?.role === 'admin') {
-      return NextResponse.redirect(new URL('/organizer/dashboard', request.url))
-    }
-    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   return supabaseResponse
@@ -72,9 +90,9 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/dashboard/:path*',
-    '/organizer/dashboard/:path*',
-    '/organizer/events/:path*',
-    '/organizer/settings/:path*',
+    '/organizers/:path*',
+    '/organizer',
+    '/organizer/:path*',
     '/login',
     '/signup',
   ],
