@@ -177,7 +177,7 @@ export default function OrganizerProfilePage({ params }: { params: { id: string 
             <p className="font-body text-sm leading-relaxed mb-5" style={{ color: 'rgba(240,234,255,0.38)' }}>{organizer.longBio}</p>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              {organizer.categories.map((cat) => (
+              {(organizer.categories || []).map((cat) => (
                 <span key={cat} className={`tag ${CATEGORY_META[cat].tagClass}`}>{CATEGORY_META[cat].label}</span>
               ))}
             </div>
