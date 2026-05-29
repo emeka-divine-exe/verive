@@ -62,6 +62,15 @@ type MetricsRow = Tables['organizer_metrics']
 
 const CLIENT = createClient()
 
+function nullableToUndefined<T>(value: T | null | undefined): T | undefined {
+  return value ?? undefined
+}
+
+function nullableString(value: string | null | undefined, fallback = ''): string {
+  return value ?? fallback
+}
+
+
 function safeCategory(value: string | null | undefined): Category {
   return CATEGORY_ORDER.includes(value as Category) ? (value as Category) : 'tech'
 }
@@ -139,8 +148,8 @@ function eventToViewModel(row: EventRow, organizer?: ProfileRow | null): Event {
     filled: row.filled || 0,
     speakers: [],
     photoQuery: `${title} event photo`,
-    imageUrl: row.image_url,
-    ticketUrl: row.ticket_url,
+    imageUrl: nullableToUndefined(row.image_url),
+    ticketUrl: nullableToUndefined(row.ticket_url),
     createdAt: row.created_at || undefined,
   }
 }
@@ -177,8 +186,8 @@ function profileToOrganizer(
     coverColor: profile.cover_url ? `linear-gradient(135deg, rgba(79,124,255,0.42) 0%, rgba(123,63,228,0.18) 100%)` : gradientFromSeed(profile.id),
     coverQuery: `${name} organizer cover`,
     verified: profile.verified === true,
-    avatarUrl: profile.avatar_url,
-    coverUrl: profile.cover_url,
+    avatarUrl: nullableToUndefined(profile.avatar_url),
+    coverUrl: nullableToUndefined(profile.cover_url),
   }
 }
 
