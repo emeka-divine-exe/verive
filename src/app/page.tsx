@@ -139,7 +139,7 @@ export default function LandingPage() {
                         boxShadow: '0 0 0 2px #0D0719',
                       }}
                     >
-                      {org.initials.charAt(0)}
+                      {(org.initials || org.name || 'O').charAt(0)}
                     </div>
                   ))}
                 </div>
