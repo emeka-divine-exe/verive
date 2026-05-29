@@ -16,6 +16,7 @@ export interface Event {
 
   organizerId:  string
   organizer:    string
+  organizerVerified?: boolean
 
   orgInitials:  string
   orgColor:     string
