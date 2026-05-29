@@ -66,6 +66,7 @@ export interface Organizer {
   // NOTE: Cover photo — search photoQuery on Pinterest
   coverQuery:  string
   verified?: boolean
+  coverUrl?: string
 }
 
 /* ── Mock Organizers ───────────────────────────────────────────── */
