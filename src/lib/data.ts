@@ -43,6 +43,16 @@ export interface Event {
   // NOTE: Replace src below with real event photo.
   // Search Pinterest for the query in photoQuery.
   photoQuery:   string
+
+  status?: 'draft' | 'pending' | 'published' | 'rejected'
+
+  featured?: boolean
+
+  publishedAt?: string
+
+  createdAt?: string
+
+  updatedAt?: string
 }
 
 export interface Organizer {
