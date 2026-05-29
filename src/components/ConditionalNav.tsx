@@ -1,17 +1,25 @@
 'use client'
+
 import { usePathname } from 'next/navigation'
 import { Navbar } from '@/components/Navbar'
-import { Footer } from '@/components/Footer'
 
-// Pages that have their own layout (no public nav/footer)
-const NO_NAV_PREFIXES = [
-  '/login', '/signup', '/forgot-password', '/reset-password', '/verify-email',
-  '/dashboard', '/organizer',
+const HIDDEN_PREFIXES = [
+  '/login',
+  '/signup',
+  '/forgot-password',
+  '/reset-password',
+  '/verify-email',
+  '/dashboard',
+  '/organizers/dashboard',
+  '/organizers/events',
+  '/organizers/media',
+  '/organizers/settings',
+  '/organizers/apply',
 ]
 
 export function ConditionalNav() {
   const pathname = usePathname()
-  const hideNav  = NO_NAV_PREFIXES.some(prefix => pathname.startsWith(prefix))
+  const hideNav = HIDDEN_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`))
   if (hideNav) return null
   return <Navbar />
 }
