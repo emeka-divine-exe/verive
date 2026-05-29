@@ -82,7 +82,7 @@ export default function LandingPage() {
   const topCategories = useMemo(() => {
     const counts = new Map<Category, number>()
     for (const organizer of organizers) {
-      for (const cat of organizer.categories) {
+      for (const cat of organizer.categories || []) {
         counts.set(cat, (counts.get(cat) || 0) + 1)
       }
     }
