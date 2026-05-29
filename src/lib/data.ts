@@ -65,6 +65,7 @@ export interface Organizer {
   // NOTE: Download logo from website listed in `website` field
   // NOTE: Cover photo — search photoQuery on Pinterest
   coverQuery:  string
+  verified?: boolean
 }
 
 /* ── Mock Organizers ───────────────────────────────────────────── */
