@@ -1,11 +1,11 @@
 {
-  "name": "Verivent — Discover Verified Events",
-  "short_name": "Verivent",
-  "description": "Curated, verified tech, design and startup events you can trust.",
+  "name": "Verive — Verified Event Discovery",
+  "short_name": "Verive",
+  "description": "Trust-first event discovery for the Lagos tech, design and startup ecosystem. Show up to what matters.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0D0719",
-  "theme_color": "#7B3FE4",
+  "background_color": "#06091A",
+  "theme_color": "#C2820D",
   "orientation": "portrait-primary",
   "icons": [
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
