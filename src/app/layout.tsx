@@ -5,14 +5,21 @@ import { ConditionalNav } from '@/components/ConditionalNav'
 import { LenisProvider } from '@/components/LenisProvider'
 
 export const metadata: Metadata = {
-  title: { default: 'Verivent — Discover Verified Events', template: '%s | Verivent' },
-  description: 'Curated, verified tech, design, and startup events across Africa.',
+  title: {
+    default: 'Verive — Verified Event Discovery',
+    template: '%s | Verive',
+  },
+  description: 'Trust-first event discovery for the Lagos tech, design and startup ecosystem. Find verified events worth showing up for.',
   manifest: '/manifest.json',
-  appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'Verivent' },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Verive',
+  },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#7B3FE4',
+  themeColor: '#C2820D',
   width: 'device-width',
   initialScale: 1,
 }
@@ -21,9 +28,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+        {/* Fontshare — Clash Display + General Sans */}
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"
+          rel="stylesheet"
+        />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
