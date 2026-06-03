@@ -24,42 +24,48 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden grid-bg px-4 py-24">
-      <div className="orb w-96 h-96 left-1/2 top-1/4 -translate-x-1/2" style={{ background: 'rgba(123,63,228,0.15)' }} />
+      <div className="orb w-96 h-96 left-1/2 top-1/4 -translate-x-1/2"
+        style={{ background: 'rgba(194,130,13,0.09)' }} />
 
       <div className="relative z-10 w-full flex flex-col items-center">
+
+        {/* Wordmark */}
         <Link href="/" className="flex items-center gap-2.5 mb-8">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center glow" style={{ background: '#7B3FE4' }}>
-            <span className="font-display font-bold text-white text-base">V</span>
-          </div>
-          <span className="font-display font-bold text-lg" style={{ color: '#F0EAFF' }}>Verivent<span style={{ color: '#7B3FE4' }}>.</span></span>
+          <span className="font-display font-bold text-lg" style={{ color: '#F0E8D6' }}>Verive</span>
+          <span className="text-[0.55rem] font-body font-bold uppercase px-1.5 py-0.5 rounded"
+            style={{ background: 'rgba(194,130,13,0.14)', color: '#C2820D', letterSpacing: '0.1em' }}>
+            Beta
+          </span>
         </Link>
 
         <div className="auth-card">
           {done ? (
             <div className="text-center">
               <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-5"
-                style={{ background: 'rgba(123,63,228,0.18)', border: '1px solid rgba(196,181,253,0.2)' }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" strokeWidth="2">
+                style={{ background: 'rgba(194,130,13,0.14)', border: '1px solid rgba(194,130,13,0.25)' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C2820D" strokeWidth="2">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                   <polyline points="22,6 12,13 2,6"/>
                 </svg>
               </div>
-              <h2 className="h-md mb-3" style={{ color: '#F0EAFF' }}>Check your inbox</h2>
-              <p className="font-body text-sm leading-relaxed mb-6" style={{ color: 'rgba(240,234,255,0.4)' }}>
-                We sent a password reset link to <strong style={{ color: '#C4B5FD' }}>{email}</strong>. It expires in 1 hour.
+              <h2 className="h-md mb-3" style={{ color: '#F0E8D6' }}>Check your inbox</h2>
+              <p className="font-body text-sm leading-relaxed mb-6" style={{ color: 'rgba(240,232,214,0.42)' }}>
+                We sent a reset link to{' '}
+                <strong style={{ color: '#C2820D' }}>{email}</strong>. It expires in 1 hour.
               </p>
               <Link href="/login" className="btn-ghost px-7 py-3 text-sm">Back to Login</Link>
             </div>
           ) : (
             <>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
-                style={{ background: 'rgba(123,63,228,0.14)', border: '1px solid rgba(196,181,253,0.15)' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" strokeWidth="2">
-                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                style={{ background: 'rgba(194,130,13,0.12)', border: '1px solid rgba(194,130,13,0.20)' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C2820D" strokeWidth="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
               </div>
-              <h1 className="h-lg mb-2" style={{ color: '#F0EAFF' }}>Reset password</h1>
-              <p className="font-body text-sm mb-7" style={{ color: 'rgba(240,234,255,0.38)' }}>
+              <h1 className="h-lg mb-2" style={{ color: '#F0E8D6' }}>Reset password</h1>
+              <p className="font-body text-sm mb-7" style={{ color: 'rgba(240,232,214,0.40)' }}>
                 Enter your email and we&apos;ll send you a reset link.
               </p>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,9 +88,9 @@ export default function ForgotPasswordPage() {
                   }
                 </button>
               </form>
-              <p className="text-center text-sm font-body mt-5" style={{ color: 'rgba(240,234,255,0.32)' }}>
+              <p className="text-center text-sm font-body mt-5" style={{ color: 'rgba(240,232,214,0.34)' }}>
                 Remember it?{' '}
-                <Link href="/login" className="font-semibold" style={{ color: '#C4B5FD' }}>Back to login</Link>
+                <Link href="/login" className="font-semibold" style={{ color: '#C2820D' }}>Back to login</Link>
               </p>
             </>
           )}
