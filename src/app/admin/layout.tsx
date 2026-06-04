@@ -3,10 +3,12 @@ import { AdminSidebar } from '@/components/admin/AdminSidebar'
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="container-page py-16 min-h-screen">
-      <div className="grid lg:grid-cols-[280px_1fr] gap-8">
-        <AdminSidebar />
-        <main>{children}</main>
+    <div className="min-h-screen pt-20 pb-16" style={{ background: '#06091A' }}>
+      <div className="container-page">
+        <div className="grid lg:grid-cols-[240px_1fr] gap-7">
+          <AdminSidebar />
+          <main className="min-w-0">{children}</main>
+        </div>
       </div>
     </div>
   )
