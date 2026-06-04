@@ -5,27 +5,37 @@ export default function CategoriesPage() {
   return (
     <main className="min-h-screen pt-28 pb-20">
       <div className="container-page">
+
         <div className="max-w-2xl mb-14">
-          <span className="text-xs uppercase tracking-[0.2em] font-semibold" style={{ color: '#7B3FE4' }}>
-            Categories
-          </span>
-          <h1 className="mt-4 text-5xl font-bold leading-tight" style={{ color: '#F0EAFF' }}>
-            Explore event ecosystems.
+          <div className="sec-label sec-label-left mb-6">
+            <span>Browse</span>
+          </div>
+          <h1 className="h-xl mb-5" style={{ color: '#F0E8D6' }}>
+            Find your<br />
+            <span className="gradient-text">ecosystem.</span>
           </h1>
-          <p className="mt-5 text-base leading-relaxed" style={{ color: 'rgba(240,234,255,0.45)' }}>
-            Category discovery is now driven by Supabase records. As you add organizers and events, these filters become more useful.
+          <p className="font-body text-base leading-relaxed" style={{ color: 'rgba(240,232,214,0.42)' }}>
+            From engineering and product to design and community — Verive covers the full Lagos tech landscape. Filter by what matters to you.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {CATEGORY_ORDER.map((category) => {
             const meta = CATEGORY_META[category]
             return (
-              <Link key={category} href={`/events?category=${category}`} className="gcard rounded-2xl p-6 transition-all hover:translate-y-[-2px]">
+              <Link
+                key={category}
+                href={`/events?category=${category}`}
+                className="gcard rounded-2xl p-6 block transition-all hover:-translate-y-1"
+              >
                 <div className="text-4xl mb-5">{meta.emoji}</div>
-                <h2 className="text-xl font-semibold mb-3" style={{ color: '#F0EAFF' }}>{meta.label}</h2>
-                <p className="text-sm leading-relaxed" style={{ color: 'rgba(240,234,255,0.4)' }}>
-                  Browse {meta.label.toLowerCase()} events and organizers from your database.
+                <h2 className="font-display font-semibold text-lg mb-2"
+                  style={{ color: '#F0E8D6', letterSpacing: '-0.01em' }}>
+                  {meta.label}
+                </h2>
+                <p className="font-body text-sm leading-relaxed"
+                  style={{ color: 'rgba(240,232,214,0.38)' }}>
+                  Explore {meta.label.toLowerCase()} events from verified organizers.
                 </p>
               </Link>
             )
