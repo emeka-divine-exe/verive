@@ -41,7 +41,7 @@ export default function AdminVerificationPage() {
     const rows = (data || []) as VRequest[]
 
     // Enrich with profile data
-    const ids   = [...new Set(rows.map(r => r.organizer_id))]
+    const ids = Array.from(new Set(rows.map(r => r.organizer_id)))
     const { data: profiles } = await supabase
       .from('profiles').select('id,full_name,email').in('id', ids)
 
