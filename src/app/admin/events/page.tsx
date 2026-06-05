@@ -33,7 +33,7 @@ export default function AdminEventsPage() {
       .from('events').select('*').order('created_at', { ascending: false })
 
     const rows = (evData || []) as EventRow[]
-    const ids  = [...new Set(rows.map(r => r.organizer_id).filter(Boolean))]
+    const ids = Array.from(new Set(rows.map(r => r.organizer_id).filter(Boolean))) as string[]
     const { data: profiles } = await supabase
       .from('profiles').select('id,full_name').in('id', ids)
 
