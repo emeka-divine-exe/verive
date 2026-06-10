@@ -235,11 +235,34 @@ async function fetchMetrics() {
   return (data || []) as MetricsRow[]
 }
 
-export async function getEvents() {
-  const [events, profiles] = await Promise.all([fetchPublishedEvents(), fetchProfiles()])
-  const profileMap = new Map(profiles.map((profile) => [profile.id, profile]))
-  return events.map((event) => eventToViewModel(event, profileMap.get(event.organizer_id || '')))
-}
+export async function getEvents(): Promise<Event[]> {
+  const supabase = createClient()
+
+  const [{ data: evData }, { data: profData }, { data: metricData }] = await Promise.all([
+    supabase.from('events').select('*'),
+    supabase.from('profiles').select('*').eq('role', 'organizer'),
+    supabase.from('organizer_metrics').select('*'),
+  ])
+
+  const profileMap = new Map((profData || []).map((p: any) => [p.id, p]))
+  const metricsMap = new Map((metricData || []).map((m: any) => [m.organizer_id, m]))
+
+  const events: Event[] = (evData || []).map((ev: any) => {
+    const profile = profileMap.get(ev.organizer_id)
+    return eventToViewModel(ev, profile)
+  })
+
+  // Sort: featured first, then by trust_score DESC, then by date
+  events.sort((a, b) => {
+    if (a.featured && !b.featured) return -1
+    if (!a.featured && b.featured) return  1
+    const aScore = metricsMap.get(a.organizerId)?.trust_score || 0
+    const bScore = metricsMap.get(b.organizerId)?.trust_score || 0
+    return bScore - aScore
+  })
+
+  return events
+      }
 
 export async function getFeaturedEvents() {
   const events = await getEvents()
