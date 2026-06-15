@@ -28,13 +28,11 @@ export function Navbar() {
 
         {/* Wordmark */}
         <Link href="/" className="flex items-center gap-2 select-none">
-          <span className="font-display font-bold text-[1.08rem] tracking-tight" style={{ color: '#F0E8D6' }}>
+          <span className="font-display font-bold text-[1.08rem] tracking-tight" style={{ color: 'var(--v-text)' }}>
             Verive
           </span>
-          <span
-            className="text-[0.55rem] font-body font-bold uppercase px-1.5 py-0.5 rounded"
-            style={{ background: 'rgba(194,130,13,0.14)', color: '#C2820D', letterSpacing: '0.1em' }}
-          >
+          <span className="text-[0.55rem] font-body font-bold uppercase px-1.5 py-0.5 rounded"
+            style={{ background: 'rgba(194,130,13,0.14)', color: 'var(--v-gold)', letterSpacing: '0.1em' }}>
             Beta
           </span>
         </Link>
@@ -42,12 +40,9 @@ export function Navbar() {
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-7">
           {LINKS.map(({ label, href }) => (
-            <Link
-              key={label}
-              href={href}
+            <Link key={label} href={href}
               className="text-sm font-body transition-colors"
-              style={{ color: pathname.startsWith(href) ? '#F0E8D6' : 'rgba(240,232,214,0.38)' }}
-            >
+              style={{ color: pathname.startsWith(href) ? 'var(--v-text)' : 'var(--v-ghost)' }}>
               {label}
             </Link>
           ))}
@@ -55,43 +50,36 @@ export function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
-          <Link
-            href="/login"
+          <Link href="/login"
             className="hidden md:block text-sm font-body transition-colors"
-            style={{ color: 'rgba(240,232,214,0.38)' }}
-          >
+            style={{ color: 'var(--v-ghost)' }}>
             Log in
           </Link>
           <Link href="/signup" className="btn-pri text-sm px-5 py-2.5">
             Get Started
           </Link>
 
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden ml-1 p-1.5 flex flex-col gap-1.5"
-            onClick={() => setOpen(o => !o)}
-            aria-label="Menu"
-          >
-            <span className={`block h-0.5 w-5 transition-all duration-300 origin-center ${open ? 'rotate-45 translate-y-2' : ''}`} style={{ background: 'rgba(240,232,214,0.6)' }} />
-            <span className={`block h-0.5 w-5 transition-all duration-300 ${open ? 'opacity-0' : ''}`} style={{ background: 'rgba(240,232,214,0.6)' }} />
-            <span className={`block h-0.5 w-5 transition-all duration-300 origin-center ${open ? '-rotate-45 -translate-y-2' : ''}`} style={{ background: 'rgba(240,232,214,0.6)' }} />
+          {/* Hamburger */}
+          <button className="md:hidden ml-1 p-1.5 flex flex-col gap-1.5"
+            onClick={() => setOpen(o => !o)} aria-label="Menu">
+            <span className={`block h-0.5 w-5 transition-all duration-300 origin-center ${open ? 'rotate-45 translate-y-2' : ''}`}
+              style={{ background: 'var(--v-ghost)' }} />
+            <span className={`block h-0.5 w-5 transition-all duration-300 ${open ? 'opacity-0' : ''}`}
+              style={{ background: 'var(--v-ghost)' }} />
+            <span className={`block h-0.5 w-5 transition-all duration-300 origin-center ${open ? '-rotate-45 -translate-y-2' : ''}`}
+              style={{ background: 'var(--v-ghost)' }} />
           </button>
         </div>
       </div>
 
       {/* Mobile drawer */}
       <div className={`md:hidden overflow-hidden transition-all duration-300 ${open ? 'max-h-80' : 'max-h-0'}`}>
-        <div
-          className="border-t px-6 py-5 flex flex-col gap-4"
-          style={{ background: 'rgba(6,9,26,0.97)', borderColor: 'rgba(240,232,214,0.06)' }}
-        >
+        <div className="border-t px-6 py-5 flex flex-col gap-4"
+          style={{ background: 'var(--v-canvas)', borderColor: 'var(--v-border)' }}>
           {[...LINKS, { label: 'Log in', href: '/login' }].map(({ label, href }) => (
-            <Link
-              key={label}
-              href={href}
-              className="text-base font-body"
-              style={{ color: 'rgba(240,232,214,0.5)' }}
-            >
+            <Link key={label} href={href}
+              className="text-base font-body transition-colors"
+              style={{ color: 'var(--v-muted)' }}>
               {label}
             </Link>
           ))}
@@ -102,4 +90,4 @@ export function Navbar() {
       </div>
     </nav>
   )
-}
+              }
