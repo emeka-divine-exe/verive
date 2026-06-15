@@ -17,8 +17,8 @@ export default function ResetPasswordPage() {
   async function handleReset(e: React.FormEvent) {
     e.preventDefault()
     setError('')
-    if (password !== confirm)   { setError('Passwords do not match.'); return }
-    if (password.length < 8)    { setError('Password must be at least 8 characters.'); return }
+    if (password !== confirm) { setError('Passwords do not match.'); return }
+    if (password.length < 8)  { setError('Password must be at least 8 characters.'); return }
     setLoading(true)
     const { error } = await supabase.auth.updateUser({ password })
     if (error) { setError(error.message); setLoading(false); return }
@@ -28,16 +28,13 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden grid-bg px-4 py-24">
-      <div className="orb w-96 h-96 left-1/2 top-1/4 -translate-x-1/2"
-        style={{ background: 'rgba(194,130,13,0.09)' }} />
+      <div className="orb w-96 h-96 left-1/2 top-1/4 -translate-x-1/2" style={{ background: 'rgba(194,130,13,0.09)' }} />
 
       <div className="relative z-10 w-full flex flex-col items-center">
-
-        {/* Wordmark */}
         <Link href="/" className="flex items-center gap-2.5 mb-8">
-          <span className="font-display font-bold text-lg" style={{ color: '#F0E8D6' }}>Verive</span>
+          <span className="font-display font-bold text-lg" style={{ color: 'var(--v-text)' }}>Verive</span>
           <span className="text-[0.55rem] font-body font-bold uppercase px-1.5 py-0.5 rounded"
-            style={{ background: 'rgba(194,130,13,0.14)', color: '#C2820D', letterSpacing: '0.1em' }}>
+            style={{ background: 'rgba(194,130,13,0.14)', color: 'var(--v-gold)', letterSpacing: '0.1em' }}>
             Beta
           </span>
         </Link>
@@ -51,15 +48,13 @@ export default function ResetPasswordPage() {
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
               </div>
-              <h2 className="h-md mb-2" style={{ color: '#F0E8D6' }}>Password updated!</h2>
-              <p className="font-body text-sm" style={{ color: 'rgba(240,232,214,0.42)' }}>
-                Redirecting you to login…
-              </p>
+              <h2 className="h-md mb-2" style={{ color: 'var(--v-text)' }}>Password updated!</h2>
+              <p className="font-body text-sm" style={{ color: 'var(--v-muted)' }}>Redirecting you to login…</p>
             </div>
           ) : (
             <>
-              <h1 className="h-lg mb-2" style={{ color: '#F0E8D6' }}>Set new password</h1>
-              <p className="font-body text-sm mb-7" style={{ color: 'rgba(240,232,214,0.40)' }}>
+              <h1 className="h-lg mb-2" style={{ color: 'var(--v-text)' }}>Set new password</h1>
+              <p className="font-body text-sm mb-7" style={{ color: 'var(--v-muted)' }}>
                 Choose a strong password for your account.
               </p>
               <form onSubmit={handleReset} className="space-y-4">
@@ -72,7 +67,7 @@ export default function ResetPasswordPage() {
                       onChange={e => setPassword(e.target.value)} required />
                     <button type="button" onClick={() => setShowPass(s => !s)}
                       className="absolute right-4 top-1/2 -translate-y-1/2"
-                      style={{ color: 'rgba(240,232,214,0.30)' }}>
+                      style={{ color: 'var(--v-ghost)' }}>
                       {showPass
                         ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                         : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
