@@ -83,7 +83,7 @@ export function EventCard({ event, variant = 'default', showOrganizer = true }: 
             <div className="flex items-center gap-2 mt-3 pt-3"
               style={{ borderTop: '1px solid var(--v-border)' }}>
               <div className="w-5 h-5 rounded-full flex items-center justify-center text-[0.5rem] font-bold flex-shrink-0"
-                style={{ background: event.organizerColor || 'var(--v-gold-dim)', color: 'var(--v-gold)' }}>
+                style={{ background: 'var(--v-gold-dim)', color: 'var(--v-gold)' }}>
                 {(event.organizer || 'O').charAt(0)}
               </div>
               <span className="text-xs font-body truncate" style={{ color: 'var(--v-muted)' }}>
