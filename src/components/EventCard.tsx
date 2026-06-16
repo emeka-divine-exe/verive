@@ -89,7 +89,7 @@ export function EventCard({ event, variant = 'default', showOrganizer = true }: 
               <span className="text-xs font-body truncate" style={{ color: 'var(--v-muted)' }}>
                 {event.organizer}
               </span>
-              {event.verified && <VerifiedBadge size={11} />}
+              {event.organizerVerified && <VerifiedBadge size={11} />}
             </div>
           )}
         </div>
