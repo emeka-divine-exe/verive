@@ -43,7 +43,6 @@ type Tables = {
     image_url: string | null
     capacity: number | null
     filled: number | null
-    status: string | null
     featured: boolean | null
     created_at: string | null
   }
@@ -142,7 +141,7 @@ function eventToViewModel(row: EventRow, organizer?: ProfileRow | null): Event {
     category,
     price,
     badge: buildBadge(row, price),
-    status: (row.status as Event['status']) || 'published',
+    // No status column on events in the real schema — every row is live the moment it's inserted.
     featured: row.featured === true,
     capacity: row.capacity || 0,
     filled: row.filled || 0,
@@ -160,7 +159,7 @@ function profileToOrganizer(
   metrics?: MetricsRow | null,
 ): Organizer {
   const name = profile.full_name?.trim() || profile.email?.split('@')[0] || 'Organizer'
-  const publishedEvents = events.filter((event) => event.status === 'published')
+  const publishedEvents = events // all rows in `events` are live — there's no status column to filter on
   const categories = Array.from(new Set(publishedEvents.map((event) => safeCategory(event.category)))).slice(0, 5) as Category[]
   const totalFilled = publishedEvents.reduce((sum, event) => sum + (event.filled || 0), 0)
   const totalCapacity = publishedEvents.reduce((sum, event) => sum + (event.capacity || 0), 0)
@@ -171,8 +170,8 @@ function profileToOrganizer(
     id: profile.id,
     name,
     initials: makeInitials(name),
-    bio: profile.bio || 'Verified event organizer on Verivent.',
-    longBio: profile.bio || 'Verified event organizer on Verivent. This profile is managed through the organizer dashboard and Supabase.',
+    bio: profile.bio || 'Verified event organizer on Verive.',
+    longBio: profile.bio || 'Verified event organizer on Verive. This profile is managed through the organizer dashboard and Supabase.',
     type: profile.role === 'admin' ? 'Platform Admin' : 'Organizer',
     categories: categories.length ? categories : ['tech'],
     eventsCount: publishedEvents.length,
@@ -192,10 +191,10 @@ function profileToOrganizer(
 }
 
 async function fetchPublishedEvents() {
+  // No status column on events — every row is live the instant it's created.
   const { data, error } = await CLIENT
     .from('events')
     .select('*')
-    .eq('status', 'published')
     .order('featured', { ascending: false })
     .order('created_at', { ascending: false })
 
@@ -262,7 +261,7 @@ export async function getEvents(): Promise<Event[]> {
   })
 
   return events
-      }
+}
 
 export async function getFeaturedEvents() {
   const events = await getEvents()
@@ -292,14 +291,14 @@ export async function getEventById(id: string) {
 }
 
 export async function getEventsByOrganizer(organizerId: string, options?: { includeDrafts?: boolean }) {
-  const query = CLIENT
+  // `includeDrafts` is kept in the signature for call-site compatibility, but is a no-op:
+  // there is no status column on events, so every event returned here is already live.
+  const { data, error } = await CLIENT
     .from('events')
     .select('*')
     .eq('organizer_id', organizerId)
-
-  if (!options?.includeDrafts) query.eq('status', 'published')
-
-  const { data, error } = await query.order('featured', { ascending: false }).order('created_at', { ascending: false })
+    .order('featured', { ascending: false })
+    .order('created_at', { ascending: false })
 
   if (error) {
     console.error('getEventsByOrganizer', error)
@@ -361,7 +360,6 @@ export async function getOrganizerDirectoryEventCount(id: string) {
     .from('events')
     .select('id', { count: 'exact', head: true })
     .eq('organizer_id', id)
-    .eq('status', 'published')
 
   if (error) {
     console.error('getOrganizerDirectoryEventCount', error)
@@ -369,4 +367,4 @@ export async function getOrganizerDirectoryEventCount(id: string) {
   }
 
   return count || 0
-}
+    }
