@@ -6,9 +6,9 @@ interface VerifiedBadgeProps {
 /**
  * The standard verified badge — same visual language as Twitter/X, Instagram, TikTok.
  * Filled circle with a white checkmark stroke inside.
- * Color defaults to Verivent primary purple.
+ * Color defaults to Verive's locked brand color: Saffron Gold.
  */
-export function VerifiedBadge({ size = 16, color = '#7B3FE4' }: VerifiedBadgeProps) {
+export function VerifiedBadge({ size = 16, color = '#C2820D' }: VerifiedBadgeProps) {
   return (
     <svg
       width={size}
@@ -19,9 +19,7 @@ export function VerifiedBadge({ size = 16, color = '#7B3FE4' }: VerifiedBadgePro
       aria-label="Verified"
       style={{ flexShrink: 0 }}
     >
-      {/* Outer filled circle */}
       <circle cx="10" cy="10" r="10" fill={color} />
-      {/* White checkmark — same proportions as Twitter/Instagram badge */}
       <path
         d="M5.5 10.5L8.3 13.3L14.5 7"
         stroke="white"
