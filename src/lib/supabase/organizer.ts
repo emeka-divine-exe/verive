@@ -25,7 +25,6 @@ type OrganizerEventPayload = {
   price: number
   ticketUrl?: string
   imageUrl?: string
-  status?: 'draft' | 'pending' | 'published' | 'rejected'
   featured?: boolean
   capacity?: number
   filled?: number
@@ -36,9 +35,6 @@ type OrganizerDashboard = Awaited<ReturnType<typeof getOrganizerById>> & {
   events: Awaited<ReturnType<typeof getEventsByOrganizer>>
   stats: {
     totalEvents: number
-    publishedCount: number
-    draftCount: number
-    pendingCount: number
     featuredCount: number
     totalCapacity: number
     totalFilled: number
@@ -62,9 +58,6 @@ export async function getOrganizerDashboard(userId: string) {
   ])
 
   const totalEvents = events.length
-  const publishedCount = events.filter((event) => event.status === 'published').length
-  const draftCount = events.filter((event) => event.status === 'draft').length
-  const pendingCount = events.filter((event) => event.status === 'pending').length
   const featuredCount = events.filter((event) => event.featured).length
   const totalCapacity = events.reduce((sum, event) => sum + (event.capacity || 0), 0)
   const totalFilled = events.reduce((sum, event) => sum + (event.filled || 0), 0)
@@ -76,9 +69,6 @@ export async function getOrganizerDashboard(userId: string) {
     events,
     stats: {
       totalEvents,
-      publishedCount,
-      draftCount,
-      pendingCount,
       featuredCount,
       totalCapacity,
       totalFilled,
@@ -126,7 +116,6 @@ export async function createOrganizerEvent(userId: string, payload: OrganizerEve
       price: payload.price,
       ticket_url: payload.ticketUrl || null,
       image_url: payload.imageUrl || null,
-      status: payload.status || 'draft',
       featured: payload.featured || false,
       capacity: payload.capacity || 0,
       filled: payload.filled || 0,
@@ -153,7 +142,6 @@ export async function updateOrganizerEvent(eventId: string, userId: string, payl
       price: payload.price,
       ticket_url: payload.ticketUrl || null,
       image_url: payload.imageUrl || null,
-      status: payload.status || 'draft',
       featured: payload.featured || false,
       capacity: payload.capacity || 0,
     })
