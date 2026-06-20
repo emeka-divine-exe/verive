@@ -43,12 +43,14 @@ export default function SignupPage() {
 
   async function handleGoogle() {
     setGoogleLoad(true)
+    // Carry the selected role (Attendee/Organizer) through the OAuth redirect.
+    // auth/callback/route.ts reads this and applies it ONLY when creating a brand-new
+    // profile — it can never change the role of an account that already exists.
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?role=${role}` },
     })
   }
-
   if (done) {
     return (
       <div className="min-h-screen flex items-center justify-center relative overflow-hidden grid-bg px-4">
