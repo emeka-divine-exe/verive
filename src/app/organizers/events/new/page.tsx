@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { createOrganizerEvent } from '@/lib/supabase/organizer'
+import { uploadPublicFile } from '@/lib/supabase/storage'
 import { CATEGORY_META, FORMAT_META, CATEGORY_ORDER, type Category, type Format } from '@/lib/data'
 
 const FORMATS: Format[] = ['in-person', 'online', 'hybrid']
@@ -13,6 +14,13 @@ const FORMATS: Format[] = ['in-person', 'online', 'hybrid']
 export default function NewEventPage() {
   const router   = useRouter()
   const supabase = createClient()
+  const [userId, setUserId] = useState('')
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) setUserId(data.user.id)
+    })
+  }, [])
 
   const [title,       setTitle]       = useState('')
   const [description, setDescription] = useState('')
@@ -30,6 +38,24 @@ export default function NewEventPage() {
 
   const [loading, setLoading] = useState(false)
   const [error,   setError]   = useState('')
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imageError,     setImageError]     = useState('')
+
+  async function handleImageUpload(file: File | null) {
+    if (!file) return
+    setUploadingImage(true)
+    setImageError('')
+    try {
+      const folder = userId ? `events/${userId}` : 'events/unassigned'
+      const result = await uploadPublicFile('event-images', folder, file)
+      setImageUrl(result.url)
+    } catch (err) {
+      console.error('event image upload failed', err)
+      setImageError('Could not upload that image. Try a smaller file or a different format.')
+    } finally {
+      setUploadingImage(false)
+    }
+  }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -196,9 +222,36 @@ export default function NewEventPage() {
         </div>
 
         <div>
-          <label className="form-label">Cover image URL (optional)</label>
-          <input type="url" className="form-input" value={imageUrl}
-            onChange={e => setImageUrl(e.target.value)} placeholder="https://..." />
+          <label className="form-label">Cover image (optional)</label>
+          {imageUrl ? (
+            <div className="relative rounded-2xl overflow-hidden mb-3" style={{ height: '140px', border: '1px solid var(--v-border-s)' }}>
+              <img src={imageUrl} alt="Cover preview" className="w-full h-full object-cover" />
+              <button type="button" onClick={() => setImageUrl('')}
+                className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center"
+                style={{ background: 'rgba(6,9,26,0.7)', color: 'var(--v-text)' }} aria-label="Remove image">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+          ) : (
+            <label className="flex flex-col items-center justify-center gap-2 rounded-2xl cursor-pointer transition-all"
+              style={{ height: '140px', border: '1px dashed var(--v-border-s)', background: 'var(--v-border)' }}>
+              <input type="file" accept="image/*" className="hidden"
+                onChange={e => handleImageUpload(e.target.files?.[0] || null)} disabled={uploadingImage} />
+              {uploadingImage ? (
+                <svg className="spinner w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="var(--v-gold)" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" strokeOpacity=".25"/><path d="M12 2a10 10 0 0 1 10 10"/>
+                </svg>
+              ) : (
+                <>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--v-ghost)" strokeWidth="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  <span className="text-xs font-body" style={{ color: 'var(--v-muted)' }}>Click to upload a cover image</span>
+                </>
+              )}
+            </label>
+          )}
+          {imageError && <p className="text-xs font-body text-red-400 mt-1.5">{imageError}</p>}
         </div>
 
         {error && (
