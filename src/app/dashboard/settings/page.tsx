@@ -14,6 +14,7 @@ export default function SettingsPage() {
   const [error,     setError]     = useState('')
   const [deleting,  setDeleting]  = useState(false)
   const [confirmDel,setConfirmDel]= useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -38,29 +39,31 @@ export default function SettingsPage() {
 
   async function handleDeleteAccount() {
     setDeleting(true)
+    setDeleteError('')
     try {
       const res = await fetch('/api/account/delete', { method: 'POST' })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
-        setError(body.error || 'We could not delete your account. Please try again.')
+        setDeleteError(body.error || 'We could not delete your account. Please try again.')
         setDeleting(false)
         return
       }
       await supabase.auth.signOut()
       router.push('/')
     } catch {
-      setError('We could not delete your account. Please try again.')
+      setDeleteError('We could not delete your account. Please try again.')
       setDeleting(false)
     }
   }
+
   return (
     <div className="p-6 md:p-10 max-w-2xl">
-      <h1 className="h-lg mb-1" style={{ color: '#F0EAFF' }}>Account Settings</h1>
-      <p className="font-body text-sm mb-10" style={{ color: 'rgba(240,234,255,0.35)' }}>Manage your profile and preferences.</p>
+      <h1 className="h-lg mb-1" style={{ color: 'var(--v-text)' }}>Account Settings</h1>
+      <p className="font-body text-sm mb-10" style={{ color: 'var(--v-muted)' }}>Manage your profile and preferences.</p>
 
       {/* Profile section */}
       <div className="gcard rounded-2xl p-7 mb-5">
-        <h2 className="h-sm mb-6" style={{ color: '#F0EAFF' }}>Profile</h2>
+        <h2 className="h-sm mb-6" style={{ color: 'var(--v-text)' }}>Profile</h2>
         <form onSubmit={handleSave} className="space-y-5">
           <div>
             <label className="form-label">Full name</label>
@@ -71,7 +74,7 @@ export default function SettingsPage() {
             <label className="form-label">Email address</label>
             <input type="email" className="form-input" value={email} disabled
               style={{ opacity: 0.5, cursor: 'not-allowed' }} />
-            <p className="text-xs font-body mt-1.5" style={{ color: 'rgba(240,234,255,0.25)' }}>
+            <p className="text-xs font-body mt-1.5" style={{ color: 'var(--v-ghost)' }}>
               Email cannot be changed. Contact support if needed.
             </p>
           </div>
@@ -93,8 +96,8 @@ export default function SettingsPage() {
 
       {/* Danger zone */}
       <div className="gcard rounded-2xl p-7" style={{ borderColor: 'rgba(239,68,68,0.15)' }}>
-        <h2 className="h-sm mb-2" style={{ color: '#F0EAFF' }}>Danger Zone</h2>
-        <p className="font-body text-sm mb-5" style={{ color: 'rgba(240,234,255,0.35)' }}>
+        <h2 className="h-sm mb-2" style={{ color: 'var(--v-text)' }}>Danger Zone</h2>
+        <p className="font-body text-sm mb-5" style={{ color: 'var(--v-muted)' }}>
           Once you delete your account, all your data will be permanently removed. This cannot be undone.
         </p>
         {!confirmDel ? (
@@ -103,13 +106,16 @@ export default function SettingsPage() {
             Delete Account
           </button>
         ) : (
-          <div className="flex items-center gap-3">
-            <button onClick={handleDeleteAccount} disabled={deleting}
-              className="px-6 py-2.5 text-sm rounded-full font-body font-semibold transition-all"
-              style={{ background: 'rgba(239,68,68,0.18)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
-              {deleting ? 'Deleting…' : 'Yes, delete my account'}
-            </button>
-            <button onClick={() => setConfirmDel(false)} className="btn-ghost px-5 py-2.5 text-sm">Cancel</button>
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <button onClick={handleDeleteAccount} disabled={deleting}
+                className="px-6 py-2.5 text-sm rounded-full font-body font-semibold transition-all"
+                style={{ background: 'rgba(239,68,68,0.18)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
+                {deleting ? 'Deleting…' : 'Yes, delete my account'}
+              </button>
+              <button onClick={() => setConfirmDel(false)} className="btn-ghost px-5 py-2.5 text-sm">Cancel</button>
+            </div>
+            {deleteError && <p className="text-xs font-body text-red-400 mt-2">{deleteError}</p>}
           </div>
         )}
       </div>
