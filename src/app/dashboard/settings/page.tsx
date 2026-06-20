@@ -38,10 +38,21 @@ export default function SettingsPage() {
 
   async function handleDeleteAccount() {
     setDeleting(true)
-    await supabase.auth.signOut()
-    router.push('/')
+    try {
+      const res = await fetch('/api/account/delete', { method: 'POST' })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        setError(body.error || 'We could not delete your account. Please try again.')
+        setDeleting(false)
+        return
+      }
+      await supabase.auth.signOut()
+      router.push('/')
+    } catch {
+      setError('We could not delete your account. Please try again.')
+      setDeleting(false)
+    }
   }
-
   return (
     <div className="p-6 md:p-10 max-w-2xl">
       <h1 className="h-lg mb-1" style={{ color: '#F0EAFF' }}>Account Settings</h1>
