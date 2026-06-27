@@ -46,7 +46,7 @@ export default function OrganizerLayout({ children }: { children: ReactNode }) {
         .from('profiles').select('*').eq('id', data.user.id).maybeSingle()
       if (!mounted) return
       setProfile(prof)
-      if (prof && prof.role !== 'organizer' && prof.role !== 'admin') {
+      if (prof && !prof.is_organizer && prof.role !== 'admin') {
         router.replace('/dashboard')
       }
     })
@@ -154,4 +154,4 @@ export default function OrganizerLayout({ children }: { children: ReactNode }) {
       </main>
     </div>
   )
-      }
+        }
