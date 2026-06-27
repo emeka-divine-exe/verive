@@ -51,11 +51,11 @@ export async function middleware(request: NextRequest) {
     if (user) {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, is_organizer')
         .eq('id', user.id)
         .maybeSingle()
 
-      if (profile?.role === 'organizer' || profile?.role === 'admin') {
+      if (profile?.is_organizer || profile?.role === 'admin') {
         return redirectTo('/organizers/dashboard', request)
       }
 
@@ -75,11 +75,11 @@ export async function middleware(request: NextRequest) {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('role, is_organizer')
       .eq('id', user.id)
       .maybeSingle()
 
-    if (!profile || (profile.role !== 'organizer' && profile.role !== 'admin')) {
+    if (!profile || (!profile.is_organizer && profile.role !== 'admin')) {
       return redirectTo('/dashboard', request)
     }
   }
@@ -96,5 +96,4 @@ export const config = {
     '/login',
     '/signup',
   ],
-    }
-
+}
