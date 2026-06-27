@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code         = searchParams.get('code')
-  const requestedRole = searchParams.get('role')
+  const requestedRole = searchParams.get('role') // 'organizer' if they picked that card on signup
 
   if (code) {
     const supabase = createClient()
@@ -14,35 +14,42 @@ export async function GET(request: Request) {
       const { data: { user } } = await supabase.auth.getUser()
 
       if (user) {
-        // Check if profile exists, create if not (Google OAuth users)
         const { data: profile } = await supabase
           .from('profiles')
-          .select('role')
+          .select('role, is_organizer')
           .eq('id', user.id)
           .single()
 
         if (!profile) {
-          // `requestedRole` comes from the signup page's Attendee/Organizer selector,
-          // carried through the OAuth redirect URL — this only ever applies to a
-          // brand-new profile. It can never change the role of an existing account,
-          // since this branch only runs when no profile row exists yet.
-          const newRole = requestedRole === 'organizer' ? 'organizer' : (user.user_metadata?.role ?? 'user')
+          // Brand new account. `role` only ever distinguishes admins from everyone
+          // else now — organizer is a capability, not a role, so it lives in is_organizer.
+          const wantsOrganizer = requestedRole === 'organizer'
 
           await supabase.from('profiles').insert({
-            id:        user.id,
-            full_name: user.user_metadata?.full_name ?? '',
-            email:     user.email,
-            role:      newRole,
-            verified:  false,
+            id:           user.id,
+            full_name:    user.user_metadata?.full_name ?? '',
+            email:        user.email,
+            role:         'user',
+            is_organizer: wantsOrganizer,
+            verified:     false,
           })
 
           return NextResponse.redirect(
-            newRole === 'organizer' ? `${origin}/organizers/dashboard` : `${origin}/dashboard`
+            wantsOrganizer ? `${origin}/organizers/dashboard` : `${origin}/dashboard`
           )
         }
 
-        // Redirect based on role
-        if (profile.role === 'organizer' || profile.role === 'admin') {
+        // Existing account, asking for organizer capability they don't have yet —
+        // just grant it. One account, multiple roles: there's no conflict to block
+        // anymore, signing up as "organizer" on an existing account simply turns
+        // the capability on.
+        if (requestedRole === 'organizer' && !profile.is_organizer) {
+          await supabase.from('profiles').update({ is_organizer: true }).eq('id', user.id)
+          return NextResponse.redirect(`${origin}/organizers/dashboard`)
+        }
+
+        // Otherwise, send them to whichever dashboard matches what they actually have.
+        if (profile.is_organizer || profile.role === 'admin') {
           return NextResponse.redirect(`${origin}/organizers/dashboard`)
         }
         return NextResponse.redirect(`${origin}/dashboard`)
