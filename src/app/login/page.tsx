@@ -23,8 +23,8 @@ export default function LoginPage() {
     if (error) { setError(error.message); setLoading(false); return }
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
-      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-      router.push(profile?.role === 'organizer' || profile?.role === 'admin' ? '/organizer/dashboard' : '/dashboard')
+      const { data: profile } = await supabase.from('profiles').select('role, is_organizer').eq('id', user.id).single()
+      router.push(profile?.is_organizer || profile?.role === 'admin' ? '/organizers/dashboard' : '/dashboard')
     }
     router.refresh()
   }
