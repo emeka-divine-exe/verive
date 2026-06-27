@@ -34,7 +34,7 @@ export default function SignupPage() {
     if (error) { setError(error.message); setLoading(false); return }
     if (data.user) {
       await supabase.from('profiles').insert({
-        id: data.user.id, full_name: fullName, email, role, verified: false,
+        id: data.user.id, full_name: fullName, email, role: 'user', is_organizer: role === 'organizer', verified: false,
       })
     }
     setDone(true)
@@ -187,4 +187,4 @@ export default function SignupPage() {
       </div>
     </div>
   )
-      }
+}
