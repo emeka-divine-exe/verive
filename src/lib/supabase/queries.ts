@@ -18,6 +18,7 @@ type Tables = {
     full_name: string | null
     email: string | null
     role: string | null
+    is_organizer: boolean | null
     verified: boolean | null
     bio: string | null
     website: string | null
@@ -210,7 +211,7 @@ async function fetchProfiles() {
   const { data, error } = await CLIENT
     .from('profiles')
     .select('*')
-    .in('role', ['organizer', 'admin'])
+    .or('is_organizer.eq.true,role.eq.admin')
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -239,7 +240,7 @@ export async function getEvents(): Promise<Event[]> {
 
   const [{ data: evData }, { data: profData }, { data: metricData }] = await Promise.all([
     supabase.from('events').select('*'),
-    supabase.from('profiles').select('*').eq('role', 'organizer'),
+    supabase.from('profiles').select('*').or('is_organizer.eq.true,role.eq.admin'),
     supabase.from('organizer_metrics').select('*'),
   ])
 
@@ -367,4 +368,4 @@ export async function getOrganizerDirectoryEventCount(id: string) {
   }
 
   return count || 0
-    }
+}
