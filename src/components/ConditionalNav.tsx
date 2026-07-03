@@ -15,6 +15,7 @@ const HIDDEN_PREFIXES = [
   '/organizers/media',
   '/organizers/settings',
   '/organizers/apply',
+  '/admin',
 ]
 
 export function ConditionalNav() {
