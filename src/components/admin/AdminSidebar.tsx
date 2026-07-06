@@ -1,4 +1,6 @@
 'use client'
+import { useState } from 'react'
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -11,10 +13,11 @@ const NAV = [
   { href: '/admin/users',        label: 'Users',        icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
 ]
 
-export function AdminSidebar() {
+export function AdminSidebar({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const router   = useRouter()
   const supabase = createClient()
+  const [open, setOpen] = useState(false)
 
   async function handleLogout() {
     await supabase.auth.signOut()
@@ -22,9 +25,8 @@ export function AdminSidebar() {
     router.refresh()
   }
 
-  return (
-    <aside className="gcard rounded-2xl p-5 h-fit sticky top-24">
-      {/* Brand */}
+  const SidebarContent = () => (
+    <>
       <div className="px-2 mb-6 pb-5" style={{ borderBottom: '1px solid var(--v-border)' }}>
         <div className="flex items-center gap-2 mb-1">
           <span className="font-display font-bold text-sm" style={{ color: 'var(--v-text)' }}>Verive</span>
@@ -38,12 +40,12 @@ export function AdminSidebar() {
         </p>
       </div>
 
-      {/* Nav */}
       <nav className="space-y-1 mb-5">
         {NAV.map(({ href, label, icon }) => {
           const active = pathname === href
           return (
             <Link key={href} href={href}
+              onClick={() => setOpen(false)}
               className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-body transition-all"
               style={{
                 background: active ? 'var(--v-gold-dim)' : 'transparent',
@@ -77,6 +79,55 @@ export function AdminSidebar() {
         </svg>
         Log out
       </button>
-    </aside>
+    </>
   )
-    }
+
+  return (
+    <div className="min-h-screen flex">
+
+      {/* Mobile top bar */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 h-14 flex items-center justify-between px-5 nav-glass">
+        <div className="flex items-center gap-2">
+          <span className="font-display font-bold text-sm" style={{ color: 'var(--v-text)' }}>Verive</span>
+          <span className="text-[0.48rem] font-body font-bold uppercase px-1.5 py-0.5 rounded"
+            style={{ background: 'rgba(239,68,68,0.16)', color: '#FCA5A5', letterSpacing: '0.08em' }}>
+            Admin
+          </span>
+        </div>
+        <button onClick={() => setOpen(o => !o)} aria-label="Menu"
+          className="p-1.5 flex flex-col gap-1.5">
+          <span className={`block h-0.5 w-5 transition-all duration-300 origin-center ${open ? 'rotate-45 translate-y-2' : ''}`}
+            style={{ background: 'var(--v-ghost)' }} />
+          <span className={`block h-0.5 w-5 transition-all duration-300 ${open ? 'opacity-0' : ''}`}
+            style={{ background: 'var(--v-ghost)' }} />
+          <span className={`block h-0.5 w-5 transition-all duration-300 origin-center ${open ? '-rotate-45 -translate-y-2' : ''}`}
+            style={{ background: 'var(--v-ghost)' }} />
+        </button>
+      </div>
+
+      {/* Mobile drawer */}
+      <div className={`lg:hidden fixed inset-y-0 left-0 z-40 w-72 transition-transform duration-300 pt-14 p-5 overflow-y-auto
+        ${open ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ background: 'var(--v-canvas)', borderRight: '1px solid var(--v-border)' }}>
+        <SidebarContent />
+      </div>
+
+      {/* Mobile backdrop */}
+      {open && (
+        <div className="lg:hidden fixed inset-0 z-30 bg-black/50"
+          onClick={() => setOpen(false)} />
+      )}
+
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:block w-[240px] flex-shrink-0 p-6 sticky top-0 h-screen overflow-y-auto"
+        style={{ borderRight: '1px solid var(--v-border)' }}>
+        <SidebarContent />
+      </aside>
+
+      {/* Main content */}
+      <main className="flex-1 min-w-0 pt-14 lg:pt-0 p-5 lg:p-8 overflow-x-hidden">
+        {children}
+      </main>
+    </div>
+  )
+}
