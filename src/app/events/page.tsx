@@ -70,10 +70,10 @@ function FeedContent() {
   const hasFilters = activeCats.length > 0 || activeFormat || freeOnly || search.length > 0
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
 
       {/* Page header */}
-      <div className="page-header">
+      <div className="page-header overflow-x-hidden">
         <div className="orb w-96 h-96 right-0 top-0 translate-x-1/3 -translate-y-1/4"
           style={{ background: 'rgba(194,130,13,0.09)' }} />
         <div className="container-page relative z-10">
